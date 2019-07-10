@@ -1,0 +1,30 @@
+{
+  "name": "nimrod-portal",
+  "version": "1.0.0",
+  "description": "Nimrod Portal",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@code.rcc.uq.edu.au:nimrod/nimrod-portal.git"
+  },
+  "author": "The University of Queensland",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "angular": "~1.5.0",
+    "angular-animate": "~1.5.0",
+    "angular-aria": "~1.5.0",
+    "angular-cookies": "~1.5.0",
+    "angular-loader": "~1.5.0",
+    "angular-material": "~0.11.2",
+    "angular-mocks": "~1.5.0",
+    "angular-resource": "~1.5.0",
+    "angular-route": "~1.5.0",
+    "angular-ui-bootstrap": "~2.5.0",
+    "angular-ui-grid": "~4.0.0",
+    "html5-boilerplate": "~5.3.0",
+    "jquery": "^3.3.1"
+  }
+}
