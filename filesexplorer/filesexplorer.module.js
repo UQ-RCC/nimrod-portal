@@ -2,21 +2,22 @@
 
 angular
 	.module('nimrod-portal.filesexplorer', ['nimrod-portal.services'])
-	.controller('ModalInstanceCtrl', ['$scope', '$rootScope', 
-    	'$uibModalInstance', 'modalContents', 'ListFolderFactory', 'UserPreferenceFactory',
-    function ($scope, $rootScope, 
-      	$uibModalInstance, modalContents, ListFolderFactory, UserPreferenceFactory) {
+	.controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', 
+    'modalContents', 'ListFolderFactory', 'UserPreferenceFactory',
+    function ($scope, $uibModalInstance, 
+      modalContents, ListFolderFactory, UserPreferenceFactory) {
       var $ctrl = this; 
+      var lastPaths = null;
       $ctrl.modalContents = modalContents;
       $ctrl.modalContents.loading = false;
       $ctrl.modalContents.filesFolderList = [];
       if($ctrl.modalContents.initialPath == null || $ctrl.modalContents.initialPath.trim()=="")
-        $ctrl.modalContents.currentpath = "/afm01"; //"/afm01/Q0703"; 
+        $ctrl.modalContents.currentpath = "/QRISdata";  
       else
         $ctrl.modalContents.currentpath = $ctrl.modalContents.initialPath;    
       $ctrl.modalContents.selectAll = false;
-      $ctrl.modalContents.extensions = ["tif", "nd2", "ims", "sld"];
-      $ctrl.modalContents.extension = "";
+      $ctrl.modalContents.extensions = ["tiff","tif", "nd2", "ims", "sld"];
+      //$ctrl.modalContents.extension = "";
       $ctrl.modalContents.newItem = "";
       if($ctrl.modalContents.initialNewItem != null && $ctrl.modalContents.initialNewItem.trim()!="")
         $ctrl.modalContents.newItem =  $ctrl.modalContents.initialNewItem;    
@@ -33,69 +34,72 @@ angular
         if(!newPath.endsWith("/"))
             newPath = newPath + "/";
         $ctrl.modalContents.loading = true;
-		ListFolderFactory.query({
-	        'folderpath': btoa(newPath)
-	    }).$promise.then(
-	         function(returnData){
-	            //for some reason 500 is considered success :-s
-	            if(returnData.status == 500){
-	                $ctrl.modalContents.loading = false;
-	                $ctrl.modalContents.currentpath = oldPath;
-	                $rootScope.$broadcast("notify", "Error loading:" + newPath + ". You probably do not have permission");
-	                return;
-	            }
-	            var data = returnData.commandResult;
-	            if(data == null){
-	                $ctrl.modalContents.loading = false;
-	                return;
-	            }                                            
-	            data.forEach(function(element) {
-	                element.children = [];
-	                element.type = 'f';
-	                if(['d', 'l'].includes(element.permission.charAt(0))){
-	                    element.type = element.permission.charAt(0);
-	                    element.children.push({name: "", children: []})
-	                    // symlink
-	                    if(element.type==='l')
-	                        element.name = element.name.split("->")[0].trim();
-	                }
-	                element.path = newPath + element.name;
-	                element.selected = false;
-	            });
-	            $ctrl.modalContents.filesFolderList = data;
-	            $ctrl.modalContents.loading = false;
-	            $ctrl.modalContents.currentpath = newPath;
-	            // save to currentpath
-	            var lastPath = {'lastPath': newPath};
-      			UserPreferenceFactory.update({}, JSON.stringify(lastPath));
+        ListFolderFactory.query({
+          'folderpath': btoa(newPath)
+        }).$promise.then(
+           function(returnData){
+              //for some reason 500 is considered success :-s
+              if(returnData.status == 500){
+                  $ctrl.modalContents.loading = false;
+                  $ctrl.modalContents.currentpath = oldPath;
+                  $scope.broadcastMessage("Error loading:" + newPath + ". You probably do not have permission");
+                  return;
+              }
+              var data = returnData.commandResult;
+              if(data == null){
+                  $ctrl.modalContents.loading = false;
+                  return;
+              }                                            
+              data.forEach(function(element) {
+                  element.children = [];
+                  element.type = 'f';
+                  if(['d', 'l'].includes(element.permission.charAt(0))){
+                      element.type = element.permission.charAt(0);
+                      element.children.push({name: "", children: []})
+                      // symlink
+                      if(element.type==='l')
+                          element.name = element.name.split("->")[0].trim();
+                  }
+                  element.path = newPath + element.name;
+                  element.selected = false;
+              });
+              $ctrl.modalContents.filesFolderList = data;
+              $ctrl.modalContents.loading = false;
+              $ctrl.modalContents.currentpath = newPath;
+              lastPaths[$ctrl.modalContents.source][$ctrl.modalContents.mode] 
+                                  = $ctrl.modalContents.currentpath;
+              // save to currentpath
+              UserPreferenceFactory.update({}, 
+                    JSON.stringify({'lastPaths':  angular.toJson( lastPaths )})
+              );
 	        }
 	    ),
 	    function (error) {
 	        console.log("Error: failed to load:" + newPath);
 	        $ctrl.modalContents.loading = false;
 	        $ctrl.modalContents.currentpath = oldPath;
-	        $rootScope.$broadcast("notify", "Error loading:" + newPath + ". You probably do not have permission");
+	        $scope.broadcastMessage("Error loading:" + newPath + ". You probably do not have permission");
 	    }                 
       };
 
       $ctrl.copyCurrentPathToClipboard = function(){
       	var copyElement = document.createElement("textarea");
-		copyElement.style.position = 'fixed';
-		copyElement.style.opacity = '0';
-		copyElement.textContent = $ctrl.modalContents.currentpath;
-		var body = document.getElementsByTagName('body')[0];
-		body.appendChild(copyElement);
-		copyElement.select();
-		try{
-			var successful = document.execCommand('copy');
-			if (!successful) throw successful;
-			$rootScope.$broadcast("notify", "Copied to clipboard");
+    		copyElement.style.position = 'fixed';
+    		copyElement.style.opacity = '0';
+    		copyElement.textContent = $ctrl.modalContents.currentpath;
+    		var body = document.getElementsByTagName('body')[0];
+    		body.appendChild(copyElement);
+    		copyElement.select();
+    		try{
+    			var successful = document.execCommand('copy');
+    			if (!successful) throw successful;
+    			$scope.broadcastMessage("Copied to clipboard");
 
-		}
-		catch (err) {
-			$rootScope.$broadcast("notify", "Error: cannot copy to clipboard");
-		}
-		body.removeChild(copyElement);
+    		}
+    		catch (err) {
+    			$scope.broadcastMessage("Error: cannot copy to clipboard");
+    		}
+    		body.removeChild(copyElement);
       }
 
       var createQuickNavs = function(folderPath){
@@ -128,6 +132,8 @@ angular
         var home = "/clusterdata/";
         if($scope.session != undefined && $scope.session != null){
             home = home + $scope.session.uname;
+            var dir30days="/30days/" + $scope.session.uname;
+            var dir90days="/90days/" + $scope.session.uname;
         }
         // query the list of bookmarks
         UserPreferenceFactory.get().$promise.then(
@@ -145,25 +151,28 @@ angular
 		            }
 		        });
 		        if(!hasHome){
-		        	$ctrl.modalContents.shortcuts.unshift({'label': 'home', 'path':home})
+		        	$ctrl.modalContents.shortcuts.unshift({'label': 'home', 'path':home});
+              $ctrl.modalContents.shortcuts.unshift({'label': '30days', 'path':dir30days});
+              $ctrl.modalContents.shortcuts.unshift({'label': '90days', 'path':dir90days});
 		        }
 		        // last path
-		        var lastPath = "";
-		        if(data.hasOwnProperty("lastPath"))
-        			lastPath = data["lastPath"];
-        		// only set to last path if initialPath is not empty
-        		if(lastPath && ($ctrl.modalContents.initialPath == null || $ctrl.modalContents.initialPath.trim()=="") ){
-        			$ctrl.modalContents.currentpath = lastPath;
+            if(data.hasOwnProperty("lastPaths"))
+                lastPaths = JSON.parse(data['lastPaths']);
+            else    
+                lastPaths = {};                        
+            if(!lastPaths.hasOwnProperty($ctrl.modalContents.source))
+              lastPaths[$ctrl.modalContents.source] = {};
+            var lastPathSourceMode = lastPaths[$ctrl.modalContents.source][$ctrl.modalContents.mode];
+            // only set to last path if initialPath is not empty
+        		if( lastPathSourceMode && 
+              ($ctrl.modalContents.initialPath == null || 
+                $ctrl.modalContents.initialPath.trim()=="") ){
+        			$ctrl.modalContents.currentpath = lastPathSourceMode;
         		} 
         		// load it
         		//default path
 		        createQuickNavs($ctrl.modalContents.currentpath);
-		        if(['loadtemplate', 'newtemplate'].includes($ctrl.modalContents.mode)){
-		            createQuickNavs(home + "/.microvolution");
-		            ls(home + "/.microvolution", "");
-		        }
-		        else
-		            ls($ctrl.modalContents.currentpath, "");
+		        ls($ctrl.modalContents.currentpath, "");
             }
         );
       };    
@@ -221,7 +230,14 @@ angular
 
       $ctrl.selectItem = function(item){
         if(item.selected){
-            $ctrl.modalContents.selectedItems.push(item);
+          if(['selectfolders'].includes($ctrl.modalContents.mode)){
+            // remove all other items
+            $ctrl.modalContents.selectedItems.forEach(function(item){
+              item.selected = false;
+            });
+            $ctrl.modalContents.selectedItems = [];
+          }
+          $ctrl.modalContents.selectedItems.push(item);
         }
         else{
             $ctrl.modalContents.selectedItems.pop(item);
@@ -233,7 +249,7 @@ angular
       * check whether itemSelect should be enabled
       */
       $ctrl.itemSelectDisabled = function(item){
-        if(['selectoutput', 'selectfolders'].includes($ctrl.modalContents.mode))
+        if(['selectoutput'].includes($ctrl.modalContents.mode))
             return true;
         else if(['selectfiles', 'loadpsf'].includes($ctrl.modalContents.mode)){
             return (item.permission.startsWith('d') || item.permission.startsWith('l'));
@@ -246,13 +262,26 @@ angular
       * check whether to hide the table item
       */
       $ctrl.itemHidden = function(item){
-        return ($ctrl.modalContents.mode=='selectfolders' 
-                && item.permission.startsWith('-') 
-                && !item.name.endsWith($ctrl.modalContents.extension)) ||
-                (['newtemplate', 'loadtemplate'].includes($ctrl.modalContents.mode) 
-                    && !item.name.endsWith("template")
-                    );
+            return (
+                    ($ctrl.enableFileExtension() &&
+                      $ctrl.modalContents.extension != null &&
+                      $ctrl.modalContents.extension.trim() != "" &&  
+                      item.permission.startsWith('-') &&
+                      !item.name.endsWith($ctrl.modalContents.extension))
+                    ||
+                      (['newtemplate', 'loadtemplate'].includes($ctrl.modalContents.mode) 
+                        && !item.name.endsWith("template")
+                    ));
       };
+
+      $ctrl.enableFileExtension = function(){
+        return ($ctrl.modalContents.mode=='selectfolders' ||
+                  ($ctrl.modalContents.mode=='selectfiles' && 
+                    $ctrl.modalContents.extension != null &&
+                    $ctrl.modalContents.extension.trim() != ""
+                    ) 
+                ); 
+      }
 
       
       
@@ -277,6 +306,9 @@ angular
             $ctrl.selected = $ctrl.modalContents.selectedItems;
         }
         else if($ctrl.modalContents.mode === 'selectfolders'){
+          if($ctrl.modalContents.selectedItems.length > 0)
+            $ctrl.selected = $ctrl.modalContents.currentpath + "/"+ $ctrl.modalContents.selectedItems[0].name +"/*." +$ctrl.modalContents.extension; //folder + exensions
+          else
             $ctrl.selected = $ctrl.modalContents.currentpath + "*." +$ctrl.modalContents.extension; //folder + exensions
         }
         else if($ctrl.modalContents.mode === 'newtemplate'){

@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+  - "7"
+script: npm install && mkdir artefacts && tar -zcvf  artefacts/nimrodportal-$(git describe --tags --abbrev=0).tar.gz --exclude=./artefacts .
+install: true
+deploy:
+  provider: releases
+  api_key:
+    secure: "zPNygDu6iqfM+raeMGV1Fgsm6o86VumXKOShbNnWvuVHsqDn99V2Hxav/Yov1Plw4nsYpJzgMcJhk1YSIYkL3TzNUYa9tl1FSGsJFfbdERZoWDsa48CUJ3f/mkhWcIOj8eZx4r9sGgVC3i6+nmAPiFiC8QsmkFX5LXsycffE7n4DH6zqJVoMoiEWl5svseo43ykIbWeTgDEw6V1+egry5txkrahjIJzjIADhNLdlzQZ0P99AHTHQI2btbTrlwq0XPitFROL3VqMpNW3fNvTDtIdQ4VBA8+VbyQuecbN9tqW0P2pL0CkWejH1yrzxSgJzhR4QwkZ8A1IP+5Obkzn7aRT7qp5InKW6KiW4Q2zZHXqjG/7aH5SFXybzS98KSo3Djrr+1/b5xtogQRVPBcSicFQWsKJ5Q4MmzMDDcXB6qIpTpKzkb8GE5BozpFnxRAInbgF/vKir90Mesgdr8jAJQetTsE3zZ256sGwmfcXEo4DRnPdDYN4LoVdB4qpL3cDuvTL/IkEa+1uMc//PzDRx/HIsSTFJknn5VC7xnOMsmslah/O9cq6emKgd1AseL9837vrMi3mNWapZlG7fTABfCr9V0W9df4r6NXaAFdZcwmPuMuvD/G1pfvwcWjmnottX49RKQoyoW9vYQj1DXWCsYLkUh/RqXQ/ih6FQ70C56dw="
+  skip_cleanup: true
+  file_glob: true
+  file: artefacts/nimrodportal-*.tar.gz
+  draft: false
+  overwrite: true
+  on:
+    tags: true

@@ -18,7 +18,7 @@
 
 <link rel="shortcut icon" href="https://web-publishing.uq.edu.au/sites/all/themes/custom/uq_standard/favicon.ico" type="image/vnd.microsoft.icon" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Nimrod portal - The University of Queensland, Australia</title>
+<title>Nimrod Portal - The University of Queensland, Australia</title>
 <!--link type="text/css" rel="stylesheet" href="https://static.uq.net.au/v1/fonts/Roboto/roboto.css" media="all" />
 <style type="text/css" media="all">
 @import url("https://web-publishing.uq.edu.au/sites/all/themes/custom/uq_standard/css/styles.css?olt1wp");
@@ -58,7 +58,7 @@
   </div>
   <div class="site-header__content">
     <div class="columns medium-11 large-8"> <a href="https://www.uq.edu.au/" title="UQ Homepage" class="uq-logo">The University of Queensland</a>
-      <h2 class="site-title has-2-lines"><a class="site-title__link" rel="home" title="RCC Nimrod portal" href="https://rcc.uq.edu.au/">Nimrod portal<br>
+      <h2 class="site-title has-2-lines"><a class="site-title__link" rel="home" title="Nimrod Portal" href="https://rcc.uq.edu.au/">Nimrod Portal<br>
         </a></h2>
     </div>
   </div>
@@ -67,77 +67,25 @@
     <div class="region region-navigation">
       <div id="block-system-main-menu" class="block block-system block-menu main-menu">
         <ul class="menu" id="main-menu">
-          <li class="leaf"><a id="home-btn" href="#" title="home" class="menu__link active">Home</a></li>
-          <li class="leaf"><a id="about-btn" href="#/about" title="about" class="menu__link">About</a></li>
-          <li class="leaf"><a id="faq-btn" href="#/faq" title="faq" class="menu__link">FAQs</a></li>
-          <li class="leaf"><a id="contact-btn" href="#/contact" title="contact" class="menu__link">Contact</a></li>
-          <li class="leaf"><a id="accesspolicy-btn" href="#/accesspolicy" title="policy" class="menu__link">Policy</a></li>
-          <li class="leaf"><a id="login" href="javascript:void(0);" 
-                                  ng-disabled="loginButtonDisabled('wiener')" 
-                                  ng-click="startLogin('wiener')" class="menu__link">Sign in</a></li>
-          <li class="leaf"><a id="expviewermgr" href="#/experiment-viewer" title="expviewer" class="menu__link">JobList</a></li>
-          <li class="leaf"><a id="expmanagermgr" href="#/experiment-manager" title="expmanager" class="menu__link">JobSubmit</a></li>
-          <li class="leaf"><a id="logout-btn" ng-click="doSignout()" title="signout" class="menu__link">Logout</a></li>
+          <li class="leaf"><a id="home-btn" href="#" title="portal" class="menu__link active">Portal</a></li>
+          <li class="leaf"><a id="filesmanagermgr" href="#/files-manager" title="filesmanager" class="menu__link">FilesManager</a></li>
+          <li class="leaf"><a id="expmanager" href="#/expmanager" title="expmanager" class="menu__link">Experiments</a></li>
+          <li class="leaf"><a id="resmanager" href="#/resmanager" title="resmanager" class="menu__link">Resources</a></li>
 
+          <li class="leaf"><a id="contact-btn" href="#/contact" title="contact" class="menu__link">Contact</a></li>
+          <li class="leaf"><a id="faq-btn" href="https://support.rcc.uq.edu.au/nimrod/" target="_blank" title="support" class="menu__link">Support</a></li>
+          <li class="leaf"><a id="login" href="javascript:void(0);" 
+                                  ng-disabled="loginButtonDisabled('nimrod')" 
+                                  ng-click="startLogin('nimrod')" class="menu__link">Sign in</a></li>
+          <li class="leaf"><a id="logout-btn" ng-click="doSignout()" title="signout" class="menu__link">Logout</a></li>
         </ul>
       </div>
     </div>
   </div>
-  <!-- Header Carousel -->
-  <header id="myCarousel" class="carousel slide" ng-hide="toolbarHidden">
-      <!-- Indicators -->
-      <ol class="carousel-indicators">
-          <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-          <li data-target="#myCarousel" data-slide-to="1"></li>
-      </ol>
-
-      <!-- Wrapper for slides -->
-      <div class="carousel-inner">
-          <div class="item active carousel-share">
-              <img src="images/microscopy/facilities-hero1.jpg" alt="One"/>
-          </div>
-          <div class="item carousel-share">
-              <img src="images/microscopy/facilities-hero2.jpg" alt="Two"/>
-          </div>
-      </div>
-
-      <!-- Controls -->
-      <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-          <span class="icon-prev"></span>
-      </a>
-      <a class="right carousel-control" href="#myCarousel" data-slide="next">
-          <span class="icon-next"></span>
-      </a>
-  </header>
-
+  
 
 <div class="page" ng-view></div>
-<div class="page">
-  <div class="page__content"> 
-    
-    <!-- About panel END --> 
-    <!-- partners panel  START -->
-    <div class="panel-separator"></div>
-    <div class="section--centered section">
-      <div class="section__container">
-        <div class="section__header">
-          <h2 class="section__title">Partners</h2>
-        </div>
-        <div class="section__content">
-          <p style="text-align:center">
-            <a href="https://rcc.uq.edu.au/">
-              <img alt="Research Computing Centre - UQ" height="120" src="images/rcc-logo.jpg" width="200" />
-            </a> 
-            <a href="https://www.tern.org.au/">
-              <img alt="TERN" height="120" src="images/tern-logo.png" width="200" />
-            </a>
-          </p>
-        </div>
-      </div>
-    </div>
-    <!-- partners panel END -->   
-  </div>
-</div>
+
 
 <div id="site-footer" class="site-footer">
   <div class="site-footer__content">
@@ -154,7 +102,7 @@
     <div class="row">
       <div class="site-footer__footer">
         <div class="columns large-9 medium-8"> <a href="https://www.uq.edu.au/terms-of-use/" rel="external" class="footer__link footer__terms-link">Privacy &amp; Terms of use</a> &nbsp; | &nbsp; <a href="https://www.uq.edu.au/feedback?r=https%3A//engage.uq.edu.au/" rel="external" class="footer__link footer__feedback-link">Feedback</a> </div>
-        <div class="columns large-3 medium-4"> </div>
+        <div class="columns large-3 medium-4"> Last update 21st May 2019 Release 1.0 </div>
       </div>
     </div>
   </div>
@@ -165,12 +113,7 @@
 <script src="js/jquery.js"></script>
 <!-- Bootstrap Core JavaScript -->
 <script src="js/bootstrap.min.js"></script>
-<!-- Script to Activate the Carousel -->
-<script>
-$('.carousel').carousel({
-    interval: 5000
-})
-</script>
+
 <script src="node_modules/jquery/dist/jquery.js"></script>
 <script src="node_modules/angular/angular.js"></script>
 <script src="node_modules/angular-cookies/angular-cookies.js"></script>
@@ -181,22 +124,22 @@ $('.carousel').carousel({
 <link rel="stylesheet" href="node_modules/angular-ui-grid/ui-grid.css"></link>
 <script src="node_modules/angular-ui-grid/ui-grid.js"></script>
 <script src="node_modules/angular-route/angular-route.js"></script>
+<script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
 
-<script src="services/services.module.js"></script>
-<script src="services/services.service.js"></script>
+<script src="node_modules/ng-sortable/dist/ng-sortable.min.js"></script>
+<link rel="stylesheet" href="node_modules/ng-sortable/dist/ng-sortable.min.css">
+<link rel="stylesheet" href="node_modules/ng-sortable/dist/ng-sortable.style.min.css">
 
 <script src="app.js"></script>
-<script src="landingpage/landingpage.js"></script>
-<script src="partials/partials.js"></script>
-<script src="experiment-viewer/experiment-viewer.js"></script>
-<script src="experiment-manager/experiment-manager.js"></script>
-<script src="partials/faqdirective.js"></script>
-<script src="js/jqBootstrapValidation.js"></script>
-<script src="js/contact_me.js"></script>
-
+<script src="services/services.module.js"></script>
+<script src="services/services.service.js"></script>
+<script src="files-manager/files-manager.js"></script>
 <script src="filesexplorer/filesexplorer.module.js"></script>
 <script src="filesexplorer/filesexplorer.component.js"></script>
 
-<script src="node_modules/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="landingpage/landingpage.js"></script>
+<script src="partials/partials.js"></script>
+<script src="js/jqBootstrapValidation.js"></script>
+<script src="js/contact_me.js"></script>
 </body>
 </html>
