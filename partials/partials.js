@@ -19,6 +19,9 @@ angular.module('nimrod-portal.partials', ['ngRoute', 'ngResource'])
             //document.getElementById("myFooter").style.visibility="hidden";
             var path = $location.path().replace(/\//g,'') + "-btn";
             ["home-btn", "contact-btn"].forEach(function(item){
+                document.getElementById("expmanager").className="menu__link";
+                document.getElementById("resmanager").className="menu__link";
+                document.getElementById("filesmanagermgr").className="menu__link";
                 if(item == path){
                     document.getElementById(item).className="menu__link active";
                 }

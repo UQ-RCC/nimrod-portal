@@ -11,7 +11,9 @@ angular.module('nimrod-portal', [
     'nimrod-portal.landingpage',
     'nimrod-portal.partials',
     'nimrod-portal.filesexplorer',
-    'nimrod-portal.files-manager'
+    'nimrod-portal.files-manager',
+    'nimrod-portal.experiment-manager',
+    'nimrod-portal.resource-manager'
 ]).
     config(['$routeProvider', '$httpProvider',
         function ($routeProvider, $httpProvider) {
@@ -27,7 +29,22 @@ angular.module('nimrod-portal', [
             'sessionInfo': 'session_info?service=nimrod',
             'accessToken': 'access_token?service=nimrod',
             'serverApiBase': 'https://nimrod.rcc.uq.edu.au/nimbackend/api/',
-            'listFolderBase64': 'execute/listfolderbase64'    
+            'listFolderBase64': 'execute/listfolderbase64',
+            'deleteBase64': 'execute/deletebase64',
+            'copyBase64': 'execute/copybase64',
+            'moveBase64': 'execute/moveBase64',
+            'listCopyingProcess': 'execute/listCopying',
+            'getProjects': 'execute/getprojects',
+            'getExperiments': 'execute/getexperiments',
+            'addExperiment': 'execute/addexperiment',
+            'deleteExperiment': 'execute/deleteexperiment', 
+            'getResources': 'execute/getresources',
+            'addResource': 'execute/addresrouce',
+            'deleteResource': 'execute/deleteresource',
+            'assignResource': 'execute/assignresource',
+            'unassignResource': 'execute/unassignresource',
+            'getAssignments': 'execute/getassignments',
+            'startExperiment': 'execute/startexperiment'    
         },
         'maxRetryOnServerError': 3
     })

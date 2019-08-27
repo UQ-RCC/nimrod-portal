@@ -1,34 +1,34 @@
 'use strict';
 
-angular.module('nimrod-portal.experiment-manager', [])
+angular.module('nimrod-portal.resource-manager', [])
 
     .config(['$routeProvider', function ($routeProvider) {
-        $routeProvider.when('/experiment-manager', {
-            templateUrl: 'experiment-manager/experiment-manager.html',
-            controller: 'ExperimentManagerCtrl'
+        $routeProvider.when('/resource-manager', {
+            templateUrl: 'resource-manager/resource-manager.html',
+            controller: 'ResourceManagerCtrl'
         });
     }])
 
 
-    .controller('ExperimentManagerCtrl', ['$scope', '$location', 'GetExperimentsFactory',
-        function ($scope, $location, GetExperimentsFactory) {
+    .controller('ResourceManagerCtrl', ['$scope', '$location', 'GetResourcesFactory',
+        function ($scope, $location, GetResourcesFactory) {
             
             $scope.checkSession(function(){
-                console.log("Checking session at experiment manager");
                 document.getElementById("home-btn").style.display="none";
                 document.getElementById("contact-btn").className="menu__link";
                 document.getElementById("login").style.display="none";
                 document.getElementById("logout-btn").style.display="block";
                 document.getElementById("expmanager").style.display="block";
-                document.getElementById("expmanager").className="menu__link active";
+                document.getElementById("expmanager").className="menu__link";
                 document.getElementById("resmanager").style.display="block";
-                document.getElementById("resmanager").className="menu__link";
+                document.getElementById("resmanager").className="menu__link active";
                 document.getElementById("filesmanagermgr").style.display="block";
                 document.getElementById("filesmanagermgr").className="menu__link";
-                listExperiments();
+                listResources();
             });
 
-            $scope.expGridOptions = {
+
+            $scope.resGridOptions = {
                 enableSorting: true,
                 enableRowSelection: true,
                 enableRowHeaderSelection: false,
@@ -38,10 +38,8 @@ angular.module('nimrod-portal.experiment-manager', [])
                 showGridFooter: false,
                 data: [],
                 columnDefs: [
-                  { field: 'name', displayName: 'Name', headerTooltip: 'Experiment Name' },
-                  { field: 'state', displayName: 'State', headerTooltip: 'Experiment State'},
-                  { field: 'workdir', displayName: 'Workdir', headerTooltip: 'Experiment Work Directory'},
-                  { field: 'creationtime', displayName: 'Created'}
+                  { field: 'name', displayName: 'Name', headerTooltip: 'Resource Name' },
+                  { field: 'type', displayName: 'Type', headerTooltip: 'Resource Type'}
                 ],
                 onRegisterApi: function( gridApi ) {
                     $scope.gridApi = gridApi;
@@ -55,26 +53,28 @@ angular.module('nimrod-portal.experiment-manager', [])
             };
 
             /**
-            * List all the eperiments
+            * List all the resources
             */
-            var listExperiments = function(){
-                GetExperimentsFactory.query().$promise.then(
+            var listResources = function(){
+                GetResourcesFactory.query().$promise.then(
                     function(returnData) {
                         console.log(returnData);
                         if(returnData.commandResult.length > 0){
-                            $scope.expGridOptions.data = [];
+                            $scope.resGridOptions.data = [];
                             returnData.commandResult.forEach(function (item){
-                                $scope.expGridOptions.data.push(item);                                
+                                $scope.resGridOptions.data.push(item);                                
                             });
                         }
                     },
                     function (error) {
                         console.log("Error:" + error);
-                        $scope.broadcastMessage("Could not get experiment list");
+                        $scope.broadcastMessage("Could not get resource list");
                     }
                 );
             }
-            
+
+           
+        
 
 }]);
 

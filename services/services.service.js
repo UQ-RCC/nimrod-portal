@@ -65,14 +65,6 @@ angular.
           update: { method: 'PUT', isArray: false}
       })
   }])
-  .factory('UserHomeFactory', ['$resource', 'TokenHandler', 'settings', 
-    function ($resource, tokenHandler, settings) {
-        var resource = $resource(settings.URLs.serverApiBase + settings.URLs.home, {}, {
-            query: { method: 'GET', isArray: false },
-        });
-        resource = tokenHandler.wrapActions( resource, ["query"]);
-        return resource;
-    }])
   .factory('ListFolderFactory', ['$resource', 'TokenHandler', 'settings', 
     function ($resource, tokenHandler, settings) {
         var resource = $resource(settings.URLs.serverApiBase + settings.URLs.listFolderBase64, {}, {
@@ -81,87 +73,7 @@ angular.
         resource = tokenHandler.wrapActions( resource, ["query"]);
         return resource;
     }])
-  .factory('ListTemplateFactory', ['$resource', 'TokenHandler', 'settings', 
-    function ($resource, tokenHandler, settings) {
-        var resource = $resource(settings.URLs.serverApiBase + settings.URLs.listTemplate, {}, {
-            query: { method: 'GET', isArray: false },
-        });
-        resource = tokenHandler.wrapActions( resource, ["query"]);
-        return resource;
-    }])
-  .factory('FileInfoFactory', ['$resource', 'TokenHandler', 'settings', 
-    function ($resource, tokenHandler, settings) {
-        var resource = $resource(settings.URLs.serverApiBase + settings.URLs.fileInfoBase64, {}, {
-            query: { method: 'GET', isArray: false },
-        });
-        resource = tokenHandler.wrapActions( resource, ["query"]);
-        return resource;
-    }])
-  .factory('FilesInfoFactory', ['$resource', 'TokenHandler', 'settings', 
-    function ($resource, tokenHandler, settings) {
-        var resource = $resource(settings.URLs.serverApiBase + settings.URLs.filesInfoBase64, {}, {
-            query: { method: 'GET', isArray: false },
-        });
-        resource = tokenHandler.wrapActions( resource, ["query"]);
-        return resource;
-    }])
-  .factory('FolderInfoFactory', ['$resource', 'TokenHandler', 'settings', 
-    function ($resource, tokenHandler, settings) {
-        var resource = $resource(settings.URLs.serverApiBase + settings.URLs.folderInfoBase64, {}, {
-            query: { method: 'GET', isArray: false },
-        });
-        resource = tokenHandler.wrapActions( resource, ["query"]);
-        return resource;
-    }])
-  .factory('LoadTemplateFactory', ['$resource', 'TokenHandler', 'settings', 
-    function ($resource, tokenHandler, settings) {
-        var resource = $resource(settings.URLs.serverApiBase + settings.URLs.loadTemplate, {}, {
-            query: { method: 'GET', isArray: false },
-        });
-        resource = tokenHandler.wrapActions( resource, ["query"]);
-        return resource;
-    }])
-  .factory('SaveTemplateFactory', ['$resource', 'TokenHandler', 'settings', 
-    function ($resource, tokenHandler, settings) {
-        var resource = $resource(settings.URLs.serverApiBase + settings.URLs.saveTemplateBase64, {}, {
-            query: { method: 'GET', isArray: false },
-        });
-        resource = tokenHandler.wrapActions( resource, ["query"]);
-        return resource;
-    }])
-  .factory('ExecuteJobFactory', ['$resource', 'TokenHandler', 'settings', 
-    function ($resource, tokenHandler, settings) {
-        var resource = $resource(settings.URLs.serverApiBase + settings.URLs.executeMicrovolutionBase64, {}, {
-            query: { method: 'GET', isArray: false },
-        });
-        resource = tokenHandler.wrapActions( resource, ["query"]);
-        return resource;
-    }])
-  .factory('ListJobsFactory', ['$resource', 'TokenHandler', 'settings', 
-    function ($resource, tokenHandler, settings) {
-        var resource = $resource(settings.URLs.serverApiBase + settings.URLs.listJobs, {}, {
-            query: { method: 'GET', isArray: false },
-        });
-        resource = tokenHandler.wrapActions( resource, ["query"]);
-        return resource;
-    }])
-  .factory('StopJobsFactory', ['$resource', 'TokenHandler', 'settings', 
-    function ($resource, tokenHandler, settings) {
-        var resource = $resource(settings.URLs.serverApiBase + settings.URLs.stop, {}, {
-            stop: { method: 'GET', isArray: false },
-        });
-        resource = tokenHandler.wrapActions( resource, ["stop"]);
-        return resource;
-    }])
-  .factory('ConverterFactory', ['$resource', 'TokenHandler', 'settings', 
-    function ($resource, tokenHandler, settings) {
-        var resource = $resource(settings.URLs.serverApiBase + settings.URLs.convertFileBase64, {}, {
-            query: { method: 'GET', isArray: false },
-        });
-        resource = tokenHandler.wrapActions( resource, ["query"]);
-        return resource;
-    }])
-  .factory('DeleteFilesFactory', ['$resource', 'TokenHandler', 'settings', 
+    .factory('DeleteFilesFactory', ['$resource', 'TokenHandler', 'settings', 
     function ($resource, tokenHandler, settings) {
         var resource = $resource(settings.URLs.serverApiBase + settings.URLs.deleteBase64, {}, {
             delete: { method: 'GET', isArray: false },
@@ -193,12 +105,29 @@ angular.
         resource = tokenHandler.wrapActions( resource, ["list"]);
         return resource;
     }])
-  .factory('PreprocessFactory', ['$resource', 'TokenHandler', 'settings', 
+  .factory('GetProjectsFactory', ['$resource', 'TokenHandler', 'settings', 
     function ($resource, tokenHandler, settings) {
-        var resource = $resource(settings.URLs.serverApiBase + settings.URLs.preprocess, {}, {
-            process: { method: 'GET', isArray: false },
+        var resource = $resource(settings.URLs.serverApiBase + settings.URLs.getProjects, {}, {
+            query: { method: 'GET', isArray: false },
         });
-        resource = tokenHandler.wrapActions( resource, ["process"]);
+        resource = tokenHandler.wrapActions( resource, ["query"]);
         return resource;
     }])
+  .factory('GetExperimentsFactory', ['$resource', 'TokenHandler', 'settings', 
+    function ($resource, tokenHandler, settings) {
+        var resource = $resource(settings.URLs.serverApiBase + settings.URLs.getExperiments, {}, {
+            query: { method: 'GET', isArray: false },
+        });
+        resource = tokenHandler.wrapActions( resource, ["query"]);
+        return resource;
+    }])
+  .factory('GetResourcesFactory', ['$resource', 'TokenHandler', 'settings', 
+    function ($resource, tokenHandler, settings) {
+        var resource = $resource(settings.URLs.serverApiBase + settings.URLs.getResources, {}, {
+            query: { method: 'GET', isArray: false },
+        });
+        resource = tokenHandler.wrapActions( resource, ["query"]);
+        return resource;
+    }])
+  
 ;

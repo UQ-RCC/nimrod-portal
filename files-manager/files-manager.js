@@ -29,7 +29,7 @@ angular.module('nimrod-portal.files-manager', [])
 
             // call checkSession for the first ime
             $scope.checkSession(function(){
-                document.getElementById("home-btn").className="menu__link";
+                document.getElementById("home-btn").style.display="none";
                 document.getElementById("contact-btn").className="menu__link";
                 document.getElementById("login").style.display="none";
                 document.getElementById("logout-btn").style.display="block";
@@ -365,7 +365,7 @@ angular.module('nimrod-portal.files-manager', [])
                     },
                     function (error) {
                         $scope.filesmanagerOptions.loading = false;
-                        $scope.showAlertDialog("Problem accessing Wiener");
+                        $scope.showAlertDialog("Problem accessing file list");
                     }
                 );
 
