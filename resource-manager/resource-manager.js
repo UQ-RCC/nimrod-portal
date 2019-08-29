@@ -12,7 +12,7 @@ angular.module('nimrod-portal.resource-manager', [])
 
     .controller('ResourceManagerCtrl', ['$scope', '$location', 'GetResourcesFactory',
         function ($scope, $location, GetResourcesFactory) {
-            
+            $scope.loading = false;
             $scope.checkSession(function(){
                 document.getElementById("home-btn").style.display="none";
                 document.getElementById("contact-btn").className="menu__link";
@@ -56,6 +56,7 @@ angular.module('nimrod-portal.resource-manager', [])
             * List all the resources
             */
             var listResources = function(){
+                $scope.loading = true;
                 GetResourcesFactory.query().$promise.then(
                     function(returnData) {
                         console.log(returnData);
@@ -65,8 +66,10 @@ angular.module('nimrod-portal.resource-manager', [])
                                 $scope.resGridOptions.data.push(item);                                
                             });
                         }
+                        $scope.loading = false;
                     },
                     function (error) {
+                        $scope.loading = false;
                         console.log("Error:" + error);
                         $scope.broadcastMessage("Could not get resource list");
                     }

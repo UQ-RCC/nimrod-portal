@@ -13,6 +13,8 @@ angular.module('nimrod-portal.experiment-manager', [])
     .controller('ExperimentManagerCtrl', ['$scope', '$location', 'GetExperimentsFactory',
         function ($scope, $location, GetExperimentsFactory) {
             
+            $scope.loading = false;
+
             $scope.checkSession(function(){
                 console.log("Checking session at experiment manager");
                 document.getElementById("home-btn").style.display="none";
@@ -58,6 +60,7 @@ angular.module('nimrod-portal.experiment-manager', [])
             * List all the eperiments
             */
             var listExperiments = function(){
+                $scope.loading = true;
                 GetExperimentsFactory.query().$promise.then(
                     function(returnData) {
                         console.log(returnData);
@@ -67,8 +70,10 @@ angular.module('nimrod-portal.experiment-manager', [])
                                 $scope.expGridOptions.data.push(item);                                
                             });
                         }
+                        $scope.loading = false;
                     },
                     function (error) {
+                        $scope.loading = false;
                         console.log("Error:" + error);
                         $scope.broadcastMessage("Could not get experiment list");
                     }
