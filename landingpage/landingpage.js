@@ -9,10 +9,10 @@ angular.module('nimrod-portal.landingpage', [])
         });
     }])
 
-    .controller('LandingPageCtrl', ['$scope', '$location','SessionInfoFactory',
-        function ($scope, $location, SessionInfoFactory) {
+    .controller('LandingPageCtrl', ['$scope', '$location',
+        function ($scope, $location) {
             $scope.checkSession(function(){
-                $location.path("/files-manager");
+                $location.path("/experiment-manager");
             })
         }
 

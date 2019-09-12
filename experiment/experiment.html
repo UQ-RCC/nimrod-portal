@@ -1,0 +1,112 @@
+<br />
+<div class="container">
+	<md-progress-linear ng-if="loading" md-mode="indeterminate"></md-progress-linear>
+	<md-tabs md-dynamic-height md-center-tabs>
+		<md-tab id="planfile" label="Planfile">
+			<md-content class="md-padding">
+				<form name="expForm" ng-submit="createExperiment()" flex layout-margin> 
+					<md-input-container class="md-block">
+						<label>Experiment Name</label>
+						<input type="text" ng-disabled="!newExperiment || loading" name="expname_field" ng-model="experiment.expname" ng-pattern="/^[a-zA-Z0-9_]+$/" required flex/> 
+						<div ng-messages="expForm.expname_field.$error">
+							<div ng-message="pattern">
+			            		Invalid experiment name. /^[a-zA-Z0-9_]+$/.
+			          		</div>
+				        </div>
+				    </md-input-container>
+					<!--span ng-show="expForm.expname_field.$error.pattern">Invalid Experiment name!</span-->
+					<label>Plan File</label>
+					<div layout="row" flex>
+						<div ui-ace="{
+							require: ['ace/ext/language_tools'],
+						  	useWrapMode : true,
+						  	showGutter: true,
+						  	theme:'twilight',
+						  	mode: 'javascript',
+						  	onLoad: aceLoaded,
+						  	onChange: aceChanged,
+						  	advanced: {
+					        	fontSize: '16px',
+					        	enableBasicAutocompletion: true,
+			      				enableLiveAutocompletion: true
+					      	}
+						}"
+						ng-readonly="!newExperiment || loading"
+						ng-model="experiment.planfile"
+						flex="80"></div>
+						<div layout="column" flex>
+							<md-list flex>
+			        			<md-subheader class="md-no-sticky">Insert</md-subheader>
+			        			<md-list-item class="secondary-button-padding">
+			   						<md-button ng-disabled="!newExperiment || loading" ng-click="checkAndSubmit()">Parameter</md-button>
+			  					</md-list-item>
+			  					<md-list-item class="secondary-button-padding">
+			   						<md-button ng-disabled="!newExperiment || loading" ng-click="checkAndSubmit()">Task</md-button>
+			  					</md-list-item>
+			  					<md-list-item class="secondary-button-padding">
+			   						<md-button ng-disabled="!newExperiment || loading" ng-click="checkAndSubmit()">Command</md-button>
+			  					</md-list-item>
+
+								<md-divider></md-divider>
+								<md-list-item class="secondary-button-padding">
+			   						<md-button ng-disabled="experiment.validated || loading" ng-click="validatePln()">Validate</md-button>
+			  					</md-list-item>
+			  					<md-list-item class="secondary-button-padding">
+			   						<md-button type="submit" class="md-raised md-primary" value="Create" ng-disabled="!newExperiment || !experiment.validated || loading">Create</md-button>	
+			  					</md-list-item>
+							</md-list>
+						</div>	
+					</div>
+				</form>
+			</md-content>
+		</md-tab>
+		<md-tab id="resources" label="Resources" ng-disabled="newExperiment">
+			<md-content class="md-padding">
+				<table border='0' layout-fill>
+		        <thead>
+		          <tr>
+		          	<th>
+		            </th>
+		          	<th style="text-align: left"><i>Name</i></th>
+		            <th style="text-align: left"><i>Machine</i></th>
+		            <th style="text-align: left"><i>Ncpu</i></th>
+		            <th style="text-align: left"><i>Memory</i></th>
+		            <th style="text-align: left"><i>Walltime</i></th>
+		          </tr>
+		        </thead>
+		        <tbody>
+		          <tr ng-repeat="item in resources"
+		              style="font-size: 17px; cellpadding:20px; height: 20px;">
+		            <td>
+		              <br />
+		              <md-checkbox ng-checked="item.selected" aria-label="cb" ng-click="selectItem(item)" ng-disabled="loading">
+			          </md-checkbox>	
+		              <!--input type="checkbox" ng-model="item.selected" ng-click="selectItem(item)" ng-disabled="loading"-->
+		              </input>
+		            </td>
+		            <td style="text-align: left">{{ item.name }}</td>
+		            <td style="text-align: left">{{ item.machine }}</td>
+		            <td style="text-align: left">{{ item.ncpu }}</td>
+		            <td style="text-align: left">{{ item.mem }}</td>
+		           	<td style="text-align: left">{{ item.walltime }}</td>
+		          </tr>
+		        </tbody>
+		      </table>
+			</md-content>
+		</md-tab>
+		<md-tab id="status" label="Control" ng-disabled="newExperiment || assignedResources.length==0">
+			<md-content md-direction="left" class="md-padding" layout-align="center">
+				<md-button class="md-raised md-primary" ng-disabled="loading || experiment.state=='RUNNING'" ng-click="startExperiment()">Start</md-button>
+			</md-content>
+		</md-tab>
+		
+	</md-tabs>
+
+
+	
+</div>
+
+
+
+
+

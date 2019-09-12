@@ -10,11 +10,10 @@ angular.module('nimrod-portal.experiment-manager', [])
     }])
 
 
-    .controller('ExperimentManagerCtrl', ['$scope', '$location', 'GetExperimentsFactory',
-        function ($scope, $location, GetExperimentsFactory) {
-            
+    .controller('ExperimentManagerCtrl', ['$scope', '$location', '$interval', '$mdDialog', 'ExperimentsFactory', 
+                                function ($scope, $location, $interval, $mdDialog, ExperimentsFactory) { 
             $scope.loading = false;
-
+            var expRefreshTimer;
             $scope.checkSession(function(){
                 console.log("Checking session at experiment manager");
                 document.getElementById("home-btn").style.display="none";
@@ -28,6 +27,7 @@ angular.module('nimrod-portal.experiment-manager', [])
                 document.getElementById("filesmanagermgr").style.display="block";
                 document.getElementById("filesmanagermgr").className="menu__link";
                 listExperiments();
+                expRefreshTimer=$interval(listExperiments,10000);
             });
 
             $scope.expGridOptions = {
@@ -40,10 +40,10 @@ angular.module('nimrod-portal.experiment-manager', [])
                 showGridFooter: false,
                 data: [],
                 columnDefs: [
-                  { field: 'name', displayName: 'Name', headerTooltip: 'Experiment Name' },
-                  { field: 'state', displayName: 'State', headerTooltip: 'Experiment State'},
-                  { field: 'workdir', displayName: 'Workdir', headerTooltip: 'Experiment Work Directory'},
-                  { field: 'creationtime', displayName: 'Created'}
+                  { field: 'name', displayName: 'Name', width: '20%', headerTooltip: 'Experiment Name' },
+                  { field: 'state', displayName: 'State', width: '10%', headerTooltip: 'Experiment State'},
+                  { field: 'workdir', displayName: 'Workdir', width:'40%', headerTooltip: 'Experiment Work Directory'},
+                  { field: 'creationtimeformatted', width: '30%', displayName: 'Created'}
                 ],
                 onRegisterApi: function( gridApi ) {
                     $scope.gridApi = gridApi;
@@ -61,12 +61,15 @@ angular.module('nimrod-portal.experiment-manager', [])
             */
             var listExperiments = function(){
                 $scope.loading = true;
-                GetExperimentsFactory.query().$promise.then(
+                ExperimentsFactory.getExperiments.query().$promise.then(
                     function(returnData) {
                         console.log(returnData);
                         if(returnData.commandResult.length > 0){
                             $scope.expGridOptions.data = [];
                             returnData.commandResult.forEach(function (item){
+                                var options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'};
+                                item.creationtimeformatted = new Date(parseInt(item.creationtime)*1000)
+                                                                    .toLocaleDateString("en-US", options);
                                 $scope.expGridOptions.data.push(item);                                
                             });
                         }
@@ -79,6 +82,44 @@ angular.module('nimrod-portal.experiment-manager', [])
                     }
                 );
             }
+
+
+            /**
+            * delete selected exp
+            */
+            $scope.deleteSelectedExp = function(ev){
+                var confirm = $mdDialog.confirm()
+                      .title('Are you sure to delete this experiment?')
+                      .textContent('Experiment to be deleted: ' + $scope.selectedItem.name)
+                      .ariaLabel('delete')
+                      .targetEvent(ev)
+                      .ok('Yes')
+                      .cancel('No');
+
+                $mdDialog.show(confirm).then(function() {
+                    $scope.loading = true;
+                    ExperimentsFactory.deleteExperiment.delete({'expname': $scope.selectedItem.name}).$promise.then(
+                        function() {
+                            $scope.broadcastMessage("Experiment deleted");
+                            listExperiments();
+                        },
+                        function (error) {
+                            $scope.loading = false;
+                            console.log("Error:" + error);
+                            $scope.broadcastMessage("Could not delete experiment");
+                        }
+                    );
+                }, function() {
+                    console.log("You cancelled it");
+                });
+            }
+
+            // Stop refreshing the experiments if the route changes
+            $scope.$on('$destroy', function () {
+                if (expRefreshTimer) {
+                    $interval.cancel(expRefreshTimer);
+                }
+            });
             
 
 }]);

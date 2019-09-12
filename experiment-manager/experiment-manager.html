@@ -1,13 +1,14 @@
 <br />
 <div class="container">
 
-  <div id="job-submit" ng-controller="ExperimentManagerCtrl" ng-cloak layout="column" layout-xs="column">
+  <div id="job-submit" ng-cloak layout="column" layout-xs="column">
     
     <md-progress-linear ng-if="loading" md-mode="indeterminate"></md-progress-linear>
     <div ui-grid="expGridOptions" ui-grid-selection class="smallGrid"></div>
     <div layout="row" layout-align="center center">
-    	<md-button class="md-raised md-primary" ng-href="#/experiment/{{ desktop.jobid }}" target="_blank">Edit</md-button>
-		<md-button class="md-raised md-warn" ng-click="deleteSelectedExp()">Delete</md-button>
+		<md-button class="md-raised md-primary" ng-href="#/experiment">Add</md-button>
+    	<md-button class="md-raised md-primary" ng-href="#/experiment?experimentname={{ selectedItem.name }}" ng-disabled="!selectedItem" >View</md-button>
+		<md-button class="md-raised md-warn" ng-click="deleteSelectedExp($event)" ng-disabled="!selectedItem" >Delete</md-button>
     </div>
 
   </div>

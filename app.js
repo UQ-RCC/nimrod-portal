@@ -3,6 +3,7 @@
 // Declare app level module which depends on views, and components
 angular.module('nimrod-portal', [
     'ngMaterial',
+    'ngMessages',
     'ngRoute',
     'ui.grid', 
     'ui.bootstrap',
@@ -13,12 +14,14 @@ angular.module('nimrod-portal', [
     'nimrod-portal.filesexplorer',
     'nimrod-portal.files-manager',
     'nimrod-portal.experiment-manager',
-    'nimrod-portal.resource-manager'
+    'nimrod-portal.resource-manager',
+    'nimrod-portal.experiment',
+    'nimrod-portal.resource',
+    'ui.ace' 
 ]).
     config(['$routeProvider', '$httpProvider',
         function ($routeProvider, $httpProvider) {
             $routeProvider.otherwise({redirectTo: '/landingpage'});
-            $httpProvider.interceptors.push('APIInterceptor');
         }])
     .constant('settings', {
         'URLs': {
@@ -37,66 +40,23 @@ angular.module('nimrod-portal', [
             'getProjects': 'execute/getprojects',
             'getExperiments': 'execute/getexperiments',
             'addExperiment': 'execute/addexperiment',
+            'compilePlanfile': 'execute/compileplanfile',
+            'readPlanFile': 'execute/readtextfile',
             'deleteExperiment': 'execute/deleteexperiment', 
             'getResources': 'execute/getresources',
-            'addResource': 'execute/addresrouce',
+            'addResource': 'execute/addrcchpcresource',
             'deleteResource': 'execute/deleteresource',
             'assignResource': 'execute/assignresource',
             'unassignResource': 'execute/unassignresource',
             'getAssignments': 'execute/getassignments',
             'startExperiment': 'execute/startexperiment'    
         },
-        'maxRetryOnServerError': 3
+        'maxRetryOnServerError': 1
     })
-    .service('APIInterceptor', ['$rootScope', '$location', '$injector', '$timeout', '$log', 'settings',
-        function ($rootScope, $location, $injector, $timeout, $log, settings) {
-            var service = this;
-
-            // Keep track of the failures per URL
-            var failures = {};
-
-            service.request = function (config) {
-                return config;
-            };
-
-            service.response = function (response) {
-                if (response.status !== 500 && failures.hasOwnProperty(response.config.url)) {
-                    delete failures[response.config.url];
-                }
-                return response;
-            };
-
-            service.responseError = function (response) {
-                // Redirect to login page on unauthorised response
-                if (response.status === 403) {
-                    $rootScope.$broadcast("notify", "You've been logged out!");
-                    $location.path('/');
-
-                // Retry on 500
-                } else if (response.status === 500) {
-                    var url = response.config.url;
-                    if (failures.hasOwnProperty(url)) {
-                        failures[url]++;
-                    } else {
-                        failures[url] = 1;
-                    }
-                    if (failures[url] < settings.maxRetryOnServerError) {
-                        $log.error("Retrying failed request (500) for URL " + url + " (" + failures[url] + "failures so far)");
-                        return $timeout(function () {
-                            var $http = $injector.get('$http');
-                            return $http(response.config);
-                        }, 3000);
-                    }
-                }
-                return response;
-            };
-        }])
     .controller('AppCtrl', ['$mdToast', '$rootScope', '$scope', '$interval', '$window', '$mdDialog',
-        'settings','$location', 'SessionInfoFactory', 'EndSessionFactory', 
-        'AccessTokenFactory', 'TokenHandler',
+        'settings','$location', 'SessionFactory', 'TokenHandler',
         function ($mdToast, $rootScope, $scope, $interval, $window, $mdDialog, 
-        settings,$location, SessionInfoFactory, EndSessionFactory, 
-        AccessTokenFactory, TokenHandler) {
+        settings, $location, SessionFactory, TokenHandler) {
             $rootScope.$on('notify', function (event, message) {
             $mdToast.show(
                 $mdToast.simple()
@@ -133,18 +93,18 @@ angular.module('nimrod-portal', [
             loginWindow = $window.open('about:blank', '', 
                 "top=" + top + ",left=" + left + ",width="+width+",height="+height);
             // End any existing sessions before starting a new one
-            EndSessionFactory.get({}, function() {
+            SessionFactory.endSession.get({}, function() {
                 loginWindow.location = url;
             });
         };
         // Called any time the login popup closes
         var onLoginWindowClose = function() {
-            SessionInfoFactory.get({}, function(data) {
+            SessionFactory.sessionInfo.get({}, function(data) {
                 if (data.has_oauth_access_token === "true") {
                     document.getElementById("home-btn").style.display="none";
                     document.getElementById("login").style.display="none";
                     document.getElementById("logout-btn").style.display="block";
-                    $location.path("/files-manager");
+                    $location.path("/experiment-manager");
                     document.getElementById("expmanager").style.display="block";
                     document.getElementById("resmanager").style.display="block";
                     document.getElementById("filesmanagermgr").style.display="block";
@@ -184,13 +144,13 @@ angular.module('nimrod-portal', [
                                                 $scope.checkSession();
                                             },300000);// every 5 minutes
         $scope.checkSession = function(onValidAccessTokenCallback){
-            SessionInfoFactory.get({}, function(data) {
+            SessionFactory.sessionInfo.get({}, function(data) {
                 if (data.has_oauth_access_token !== "true") {
                     $location.path("/landingpage");
                     return;
                 } else {
                     $scope.session = data;
-                    AccessTokenFactory.get({}).$promise.then(function (tokenData) {
+                    SessionFactory.accessToken.get({}).$promise.then(function (tokenData) {
                         TokenHandler.set(tokenData.access_token);
                         if(onValidAccessTokenCallback){
                             onValidAccessTokenCallback();
@@ -216,7 +176,7 @@ angular.module('nimrod-portal', [
         // sign out
         $scope.doSignout = function () {
             console.log("Signing out");
-            EndSessionFactory.get({}, function () {
+            SessionFactory.endSession.get({}, function () {
                 if(document.getElementById("login").style.display="none")
                 {
                     document.getElementById("home-btn").style.display="block";

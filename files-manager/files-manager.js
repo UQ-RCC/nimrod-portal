@@ -10,11 +10,9 @@ angular.module('nimrod-portal.files-manager', [])
     }])
 
     .controller('FilesManagerCtrl', ['$scope', '$interval', 
-        'ListFolderFactory', 'UserPreferenceFactory', '$mdDialog', '$uibModal', 
-        'DeleteFilesFactory', 'CopyFilesFactory', 'MoveFilesFactory', 'ListCopyingProcessFactory',
+        'FilesFactory', 'UserPreferenceFactory', '$mdDialog', '$uibModal', 
         function ($scope, $interval, 
-            ListFolderFactory, UserPreferenceFactory, $mdDialog, $uibModal, 
-            DeleteFilesFactory, CopyFilesFactory, MoveFilesFactory, ListCopyingProcessFactory) {
+            FilesFactory, UserPreferenceFactory, $mdDialog, $uibModal) {
             
             //refresh experiment
             var filesListRefreshTimer, lastPaths;
@@ -63,7 +61,7 @@ angular.module('nimrod-portal.files-manager', [])
                 if(!newPath.endsWith("/"))
                     newPath = newPath + "/";
                 $scope.filesmanagerOptions.loading = true;
-                ListFolderFactory.query({
+                FilesFactory.listFolder.query({
                     'folderpath': btoa(newPath)
                 }).$promise.then(
                      function(returnData){
@@ -133,6 +131,8 @@ angular.module('nimrod-portal.files-manager', [])
                 var home = "/home/";
                 if($scope.session != undefined && $scope.session != null){
                     home = home + $scope.session.uname;
+                    if($scope.session.uname == 'test')
+                        home = '/local' + home;
                     var dir30days="/30days/" + $scope.session.uname;
                     var dir90days="/90days/" + $scope.session.uname;
                 }
@@ -351,7 +351,7 @@ angular.module('nimrod-portal.files-manager', [])
                 var sourceDir = selectedFilesPaths[0];
                 $scope.filesmanagerOptions.loading = true;
                 // check whether there is any copying process going on
-                ListCopyingProcessFactory.list().$promise.then(
+                FilesFactory.listCopyingProcess.list().$promise.then(
                     function(returnData) {
                         var copyingProcess = returnData.commandResult;
                         if(copyingProcess.length == 0){
@@ -415,7 +415,7 @@ angular.module('nimrod-portal.files-manager', [])
             var doDeleteFileFolder = function(fileList){
                 var fileListStr = fileList.join(";");
                 $scope.filesmanagerOptions.loading = true;
-                DeleteFilesFactory.delete({
+                FilesFactory.deleteFiles.delete({
                     'fileslist': btoa(fileListStr)
                 }).$promise.then(
                     function(returnData) {
@@ -431,7 +431,7 @@ angular.module('nimrod-portal.files-manager', [])
             var doCopyFolder = function(ev, sourceDir, destDir, deleteSource, parallel){
                 $scope.filesmanagerOptions.loading = true; 
                 if(deleteSource){
-                    MoveFilesFactory.move({
+                    FilesFactory.moveFiles.move({
                         'sources': btoa(sourceDir),
                         'dest': btoa(destDir),
                         'parallel': parallel,
@@ -446,7 +446,7 @@ angular.module('nimrod-portal.files-manager', [])
                         }
                     );  
                 } else {
-                    CopyFilesFactory.copy({
+                    FilesFactory.copyFiles.copy({
                         'sources': btoa(sourceDir),
                         'dest': btoa(destDir),
                         'parallel': parallel,

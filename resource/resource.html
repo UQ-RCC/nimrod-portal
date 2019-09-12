@@ -1,0 +1,105 @@
+<br />
+<div class="container">
+	<md-progress-linear ng-if="loading" md-mode="indeterminate"></md-progress-linear>
+	<form name="resourceForm" ng-submit="createResource()" layout-margin> 
+		<div flex layout="row">
+			<md-input-container class="md-block" flex="45%">
+				<label>Resource Name</label>
+				<input type="text" ng-disabled="!newRes" name="resname" ng-model="resource.resname" ng-pattern="/^[a-zA-Z0-9_]+$/" required/> 
+				<div ng-messages="resourceForm.resname.$error">
+					<div ng-message="pattern">
+	            		Invalid experiment name. /^[a-zA-Z0-9_]+$/.
+	          		</div>
+		        </div>
+	    	</md-input-container>
+			
+			<md-input-container class="md-block" flex="45%">
+	    		<label>Machine@RCC</label>
+				<md-select ng-disabled="!newRes" ng-model="resource.machine" aria-label="machine">
+		          	<md-option ng-value="machine.value" ng-repeat="machine in availableMachines" ng-selected="machine.value==resource.machine">
+		            {{ machine.label }}
+		          </md-option>
+		        </md-select>
+	    	</md-input-container>
+
+	    	<md-input-container class="md-block" flex>
+	    		<label>Account</label>
+				<md-select ng-disabled="!newRes" name="account" ng-model="resource.account" aria-label="account" ng-pattern="/^[a-zA-Z0-9_]+$/" required>
+		          	<md-option ng-value="account.group" ng-repeat="account in accounts" ng-selected="account.group==resource.account">
+		            {{ account.group }}
+		          </md-option>
+		        </md-select>
+		        <div ng-messages="resourceForm.account.$error">
+					<div ng-message="pattern">
+	            		You have to select one account.
+	          		</div>
+		        </div>  
+	    	</md-input-container>
+
+		</div>
+		
+		
+        <div flex layout="row">
+	    	<md-input-container class="md-block" flex="20%">
+				<label>NCPUs</label>
+				<input type="number" ng-disabled="!newRes" name="ncpu" ng-model="resource.ncpu" min="1"/>
+				<div ng-messages="resourceForm.ncpu.$error">
+					<div ng-message="min">
+	            		Minimum must be 1.
+	          		</div>
+		        </div> 
+			</md-input-container>
+			<md-input-container class="md-block" flex="20%">
+				<label>Memory (Gbs)</label>
+				<input type="number" ng-disabled="!newRes" name="mem" ng-model="resource.mem" min="1"/>
+				<div ng-messages="resourceForm.mem.$error">
+					<div ng-message="min">
+	            		Minimum must be 1.
+	          		</div>
+		        </div>  
+			</md-input-container>
+	        <md-input-container class="md-block" flex>
+				<label>Walltime (hours)</label>
+				<input type="number" ng-disabled="!newRes" name="walltime" ng-model="resource.hour" min="1"/>
+				<div ng-messages="resourceForm.walltime.$error">
+					<div ng-message="min">
+	            		Minimum must be 1.
+	          		</div>
+		        </div>  
+			</md-input-container>
+        </div>
+
+		<div flex layout="row">
+	        <md-input-container class="md-block" flex="50%">
+				<label>Maximum number of Nimrod agents</label>
+				<input type="number" ng-disabled="!newRes" name="limit" ng-model="resource.limit" min="1"/>
+				<div ng-messages="resourceForm.limit.$error">
+					<div ng-message="min">
+	            		Minimum must be 1.
+	          		</div>
+		        </div>  
+			</md-input-container>
+
+	        <md-input-container class="md-block" flex>
+				<label>Maximum batch size for Nimrod agents</label>
+				<input type="number" ng-disabled="!newRes" name="batchsize" ng-model="resource.maxbatch" min="1"/>
+				<div ng-messages="resourceForm.batchsize.$error">
+					<div ng-message="min">
+	            		Minimum must be 1.
+	          		</div>
+		        </div>  
+			</md-input-container>
+		</div>
+		
+		<div layout-margin layout="row" layout-align="center">
+			<md-button type="submit" class="md-raised md-primary" ng-show="newRes" value="Create">Create</md-button>	
+		</div>
+	</form>
+	</div>
+	
+</div>
+
+
+
+
+
