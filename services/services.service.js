@@ -114,6 +114,13 @@ angular.
         list: { method: 'GET', isArray: false },
     });
     resources.listCopyingProcess = tokenHandler.wrapActions( resources.listCopyingProcess, ["list"]);
+    
+    // accessible locations
+    resources.accessibleLocations = $resource(settings.URLs.serverApiBase + settings.URLs.accessibleLocations, {}, {
+        query: { method: 'GET', isArray: false },
+    });
+    resources.accessibleLocations = tokenHandler.wrapActions( resources.accessibleLocations, ["query"]);
+
     return resources;
   }])
 
@@ -182,6 +189,13 @@ angular.
           unassign: { method: 'GET', isArray: false },
       });
       resources.unassignResource = tokenHandler.wrapActions( resources.unassignResource, ["unassign"]);
+
+      //check process
+      resources.checkProcess = $resource(settings.URLs.serverApiBase + settings.URLs.checkProcess, {}, {
+          check: { method: 'GET', isArray: false },
+      });
+      resources.checkProcess = tokenHandler.wrapActions( resources.checkProcess, ["check"]);
+
 
       return resources;
     }])

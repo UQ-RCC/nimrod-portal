@@ -26,6 +26,11 @@ angular.module('nimrod-portal.experiment', [])
                 document.getElementById("filesmanagermgr").style.display="block";
                 document.getElementById("filesmanagermgr").className="menu__link";
                 getOrCreateExperiment($location.search().experimentname);
+                if($location.search().experimentname)
+                    listResourcesAndAssignedResources(false);
+                else
+                    listResourcesAndAssignedResources(true);    
+                checkMasterProcessRunning();
             });
 
             // experiment
@@ -36,6 +41,10 @@ angular.module('nimrod-portal.experiment', [])
             $scope.resources = [];
             // list of assigned resources
             $scope.assignedResources = [];
+            // an extra loadign variable
+            $scope.resourceLoading = false;
+            // is master running
+            $scope.isMasterRunning = true;
             /**
             * List all the eperiments
             */
@@ -68,10 +77,10 @@ angular.module('nimrod-portal.experiment', [])
                                         }
                                     );
                                     // list resources
-                                    listResourcesAndAssignedResources(false);
+                                    if(!$scope.resourceLoading)
+                                        $scope.loading = false;
                                 }
                             });
-                            $scope.loading = false;
                         },
                         function(error){
                             $scope.loading = false;
@@ -192,63 +201,79 @@ angular.module('nimrod-portal.experiment', [])
             * List all the resources and assigned ones
             */
             var listResourcesAndAssignedResources = function(newlyCreated){
+                if(!newlyCreated){
+                    $scope.loading = true;
+                }
+                $scope.resourceLoading = true;
                 ResourcesFactory.getResources.query().$promise.then(
                     function(returnData) {
                         if(returnData.commandResult.length > 0){
                             $scope.resources = [];
-                            returnData.commandResult.forEach(function (item){
+                            for(var i=0; i< returnData.commandResult.length; i++){
+                                var item = returnData.commandResult[i];
                                 // parse string to a json
                                 var resourceConfig = item.jsonconfig
                                                     .replace(/\"\"/g, "\"")
                                                     .replace(/\"{/g, "{")
                                                     .replace(/}\"/g, "}");
                                 var resJson = JSON.parse(resourceConfig);
-                                item.machine = MiscFactory.getMachineName(resJson.hpcargs[1]);
-                                item.ncpu = resJson.ncpus;
-                                item.mem = resJson.mem/(1024*1024*1024); // to Gbs
-                                item.walltime = resJson.walltime/3600.0;
-                                item.account = resJson.account;
-                                item.selected = false;
-                                $scope.resources.push(item);                                
-                            });
+                                if(item.type==="hpc"){
+                                    item.machine = MiscFactory.getMachineName(resJson.hpcargs[1]);
+                                    item.ncpu = resJson.ncpus;
+                                    item.mem = resJson.mem/(1024*1024*1024); // to Gbs
+                                    item.walltime = resJson.walltime/3600.0;
+                                    item.account = resJson.account;
+                                    item.selected = false;
+                                }
+                                $scope.resources.push(item);
+                            }
+                            // only list assigned one for the old experiments
+                            if(!newlyCreated && $scope.experiment.expname.trim()!==''){
+                                console.log("get assignments");
+                                ExperimentsFactory.assignments.query({"expname": $scope.experiment.expname}).$promise.then(
+                                    function(returnData) {
+                                        $scope.assignedResources = [];
+                                        for(var i =0; i < returnData.commandResult.length; i++){
+                                            $scope.assignedResources.push(returnData.commandResult[i].name);
+                                            for(var j =0; j < $scope.resources.length; j++){
+                                                if(returnData.commandResult[i].name == $scope.resources[j].name)
+                                                    $scope.resources[j].selected = true;
+                                            }    
+                                        }
+                                        console.log("done resource loading");
+                                        $scope.resourceLoading = false;
+                                        $scope.loading = false;
+                                    },
+                                    function (error) {
+                                        console.log("Error getting assignments");
+                                        console.log(error);
+                                    }
+                                );
+                            }
+                            else{
+                                $scope.resourceLoading = false;
+                                $scope.loading = false;
+                            }
                         }
-                        console.log($scope.resources);
                     },
                     function (error) {
                         console.log("Error getting resources")
                         console.log(error);
                     }
                 );
-                // only list assigned one for the old experiments
-                if(!newlyCreated){
-                    ExperimentsFactory.assignments.query({"expname": $scope.experiment.expname}).$promise.then(
-                        function(returnData) {
-                            $scope.assignedResources = [];
-                            for(var i =0; i < returnData.commandResult.length; i++){
-                                $scope.assignedResources.push(returnData.commandResult[i].name);
-                                for(var j =0; j < $scope.resources.length; j++){
-                                    if(returnData.commandResult[i].name == $scope.resources[j].name)
-                                        $scope.resources[j].selected = true;
-                                }    
-                            }
-                        },
-                        function (error) {
-                            console.log("Error getting assignments");
-                            console.log(error);
-                        }
-                    );
-                }
             }
 
             /******************************************/
             /* start exp**/
             /*******************************************/
             $scope.startExperiment = function(){
-                ExperimentsFactory.startExperiment.start({"expname": $scope.experiment.expname}).$promise.then(
+                $scope.loading = true;
+                ExperimentsFactory.startExperiment.start({"experiment": $scope.experiment.expname}).$promise.then(
                     function(returnData) {
                         $location.path("/experiment-manager");
                     },
                     function (error) {
+                        $scope.loading = false;
                         console.log("Error starting experiment");
                         console.log(error);
                         $scope.showAlertDialog("Could not start experiment:" + $scope.experiment.expname);
@@ -267,6 +292,29 @@ angular.module('nimrod-portal.experiment', [])
              
             $scope.aceChanged = function(e) {
             };
+
+
+
+            /******************************************/
+            /* check master process **/
+            /*******************************************/
+            var checkMasterProcessRunning = function(){
+                ExperimentsFactory.checkProcess.check().$promise.then(
+                        function(returnData) {
+                            var cmdResult = returnData.commandResult;
+                            if(cmdResult.hasOwnProperty('alive')){
+                                var alive = parseInt(cmdResult.alive);
+                                $scope.isMasterRunning = (alive===1);
+                            }
+                            else
+                                $scope.isMasterRunning = false;    
+                        },
+                        function (error) {
+                            // is this safe ?
+                            $scope.isMasterRunning = false;    
+                        }
+                    )                
+            }
             
             
 

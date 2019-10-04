@@ -34,6 +34,17 @@
 		<!-- main contents -->
 		<div layout="row">
 		    <div layout="column" flex="15">
+		    <table border='0'>
+		        <caption>Locations</caption>
+		        <tbody>
+		          <tr ng-repeat="location in locations" style="font-size: 17px;">
+		            <td ng-disabled="filesmanagerOptions.loading" ng-click="visitShortcut(location)">{{ location }}
+		            </td>
+		          </tr>
+		        </tbody>
+		      </table>
+		      
+
 		      <!-- a table of shortcuts-->
 		      <table border='0'>
 		        <caption>Bookmarks</caption>

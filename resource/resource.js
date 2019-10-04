@@ -69,23 +69,26 @@ angular.module('nimrod-portal.resource', [])
                                                     .replace(/\"{/g, "{")
                                                     .replace(/}\"/g, "}");
                                     var resJson = JSON.parse(resourceConfig);
-                                    console.log(resJson);
-                                    $scope.resource = {
-                                        'resname': resourcename,
-                                        'machine': resJson.hpcargs[1],
-                                        'ncpu': resJson.ncpus,
-                                        'mem': resJson.mem/(1024*1024*1024), // to Gbs
-                                        'hour': resJson.walltime/3600.0,
-                                        'limit': resJson.limit,
-                                        'maxbatch': resJson.max_batch_size,
-                                        'account': resJson.account
-                                    };
-                                    for (var i = 0; i < resJson.hpcargs.length-1; i++) {
-                                        if(resJson.hpcargs[i]=='-q'){
-                                            $scope.resource.machine = resJson.hpcargs[i+1].split('@')[1];
+                                    if(resource.type==="hpc"){
+                                        //console.log(resJson);
+                                        $scope.resource = {
+                                            'resname': resourcename,
+                                            'machine': resJson.hpcargs[1],
+                                            'ncpu': resJson.ncpus,
+                                            'mem': resJson.mem/(1024*1024*1024), // to Gbs
+                                            'hour': resJson.walltime/3600.0,
+                                            'limit': resJson.limit,
+                                            'maxbatch': resJson.max_batch_size,
+                                            'account': resJson.account
+                                        };
+                                        for (var i = 0; i < resJson.hpcargs.length-1; i++) {
+                                            if(resJson.hpcargs[i]=='-q'){
+                                                $scope.resource.machine = resJson.hpcargs[i+1].split('@')[1];
+                                            }
+                                            //Do something
                                         }
-                                        //Do something
                                     }
+                                    
                                     $scope.newRes = false;
                                 }
                             });

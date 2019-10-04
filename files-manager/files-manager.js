@@ -24,7 +24,7 @@ angular.module('nimrod-portal.files-manager', [])
                 'shortcuts': [],
                 'loading': false
             };
-
+            $scope.locations = [];
             // call checkSession for the first ime
             $scope.checkSession(function(){
                 document.getElementById("home-btn").style.display="none";
@@ -39,6 +39,16 @@ angular.module('nimrod-portal.files-manager', [])
                 document.getElementById("filesmanagermgr").className="menu__link active";
                 //get the jobs for the first time
                 $scope.init();
+                //get accessible folders
+                FilesFactory.accessibleLocations.query().$promise.then(
+                     function(returnData){
+                        var accessibleLocations = returnData.commandResult;
+                        accessibleLocations.forEach(function(location){
+                            $scope.locations.push(location.path);
+                        });
+                        
+                    }
+                )
                 //listFolder($scope.filesmanagerOptions.currentpath);
                 filesListRefreshTimer=$interval(function(){ls($scope.filesmanagerOptions.currentpath);},60000);
             });
@@ -127,15 +137,6 @@ angular.module('nimrod-portal.files-manager', [])
             * init the file explorer
             */
             $scope.init = function(){
-                // now move into shotcuts
-                var home = "/home/";
-                if($scope.session != undefined && $scope.session != null){
-                    home = home + $scope.session.uname;
-                    if($scope.session.uname == 'test')
-                        home = '/local' + home;
-                    var dir30days="/30days/" + $scope.session.uname;
-                    var dir90days="/90days/" + $scope.session.uname;
-                }
                 // query the list of bookmarks
                 UserPreferenceFactory.get().$promise.then(
                     function (data) {
@@ -144,18 +145,6 @@ angular.module('nimrod-portal.files-manager', [])
                             $scope.filesmanagerOptions.shortcuts = JSON.parse(data["bookmarks"]);
                         else
                             $scope.filesmanagerOptions.shortcuts = []; 
-                        // home   
-                        var hasHome = false;
-                        $scope.filesmanagerOptions.shortcuts.forEach(function(item){
-                            if(item.label == 'home'){
-                                hasHome = true;
-                            }
-                        });
-                        if(!hasHome){
-                            $scope.filesmanagerOptions.shortcuts.unshift({'label': 'home', 'path':home})
-                            $scope.filesmanagerOptions.shortcuts.unshift({'label': '30days', 'path':dir30days})
-                            $scope.filesmanagerOptions.shortcuts.unshift({'label': '90days', 'path':dir90days})
-                        }
                         // last path
                         if(data.hasOwnProperty("lastPaths"))
                             lastPaths = JSON.parse(data['lastPaths']);

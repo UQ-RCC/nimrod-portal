@@ -36,8 +36,9 @@ angular.module('nimrod-portal', [
             'deleteBase64': 'execute/deletebase64',
             'copyBase64': 'execute/copybase64',
             'moveBase64': 'execute/moveBase64',
-            'listCopyingProcess': 'execute/listCopying',
+            'listCopyingProcess': 'execute/listcopying',
             'getProjects': 'execute/getprojects',
+            'accessibleLocations': 'execute/accessiblelocations',
             'getExperiments': 'execute/getexperiments',
             'addExperiment': 'execute/addexperiment',
             'compilePlanfile': 'execute/compileplanfile',
@@ -49,7 +50,8 @@ angular.module('nimrod-portal', [
             'assignResource': 'execute/assignresource',
             'unassignResource': 'execute/unassignresource',
             'getAssignments': 'execute/getassignments',
-            'startExperiment': 'execute/startexperiment'    
+            'startExperiment': 'execute/startexperiment',
+            'checkProcess': 'execute/checkprocess'    
         },
         'maxRetryOnServerError': 1
     })

@@ -60,7 +60,7 @@
 				</form>
 			</md-content>
 		</md-tab>
-		<md-tab id="resources" label="Resources" ng-disabled="newExperiment">
+		<md-tab id="resources" label="Resources" ng-disabled="newExperiment || loading">
 			<md-content class="md-padding">
 				<table border='0' layout-fill>
 		        <thead>
@@ -94,9 +94,9 @@
 		      </table>
 			</md-content>
 		</md-tab>
-		<md-tab id="status" label="Control" ng-disabled="newExperiment || assignedResources.length==0">
+		<md-tab id="status" label="Control" ng-disabled="newExperiment || assignedResources.length==0 || loading">
 			<md-content md-direction="left" class="md-padding" layout-align="center">
-				<md-button class="md-raised md-primary" ng-disabled="loading || experiment.state=='RUNNING'" ng-click="startExperiment()">Start</md-button>
+				<md-button class="md-raised md-primary" ng-disabled="loading || experiment.state=='RUNNING' || isMasterRunning" ng-click="startExperiment()">Start</md-button>
 			</md-content>
 		</md-tab>
 		

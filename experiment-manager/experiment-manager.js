@@ -27,7 +27,7 @@ angular.module('nimrod-portal.experiment-manager', [])
                 document.getElementById("filesmanagermgr").style.display="block";
                 document.getElementById("filesmanagermgr").className="menu__link";
                 listExperiments();
-                expRefreshTimer=$interval(listExperiments,10000);
+                expRefreshTimer=$interval(listExperiments,20000);
             });
 
             $scope.expGridOptions = {
@@ -41,9 +41,12 @@ angular.module('nimrod-portal.experiment-manager', [])
                 data: [],
                 columnDefs: [
                   { field: 'name', displayName: 'Name', width: '20%', headerTooltip: 'Experiment Name' },
-                  { field: 'state', displayName: 'State', width: '10%', headerTooltip: 'Experiment State'},
-                  { field: 'workdir', displayName: 'Workdir', width:'40%', headerTooltip: 'Experiment Work Directory'},
-                  { field: 'creationtimeformatted', width: '30%', displayName: 'Created'}
+                  { field: 'state', displayName: 'State', width: '12%', headerTooltip: 'Experiment State'},
+                  { field: 'completed', displayName: 'Completed', width:'11%', headerTooltip: 'Number of completed jobs'},
+                  { field: 'failed', displayName: 'Failed', width:'11%', headerTooltip: 'Number of failed jobs'},
+                  { field: 'pending', displayName: 'Pending', width:'11%', headerTooltip: 'Number of pending jobs'},
+                  { field: 'total', displayName: 'Total', width:'11%', headerTooltip: 'Number of total jobs'},
+                  { field: 'creationtimeformatted', width: '24%', displayName: 'Created'}
                 ],
                 onRegisterApi: function( gridApi ) {
                     $scope.gridApi = gridApi;
@@ -67,9 +70,21 @@ angular.module('nimrod-portal.experiment-manager', [])
                         if(returnData.commandResult.length > 0){
                             $scope.expGridOptions.data = [];
                             returnData.commandResult.forEach(function (item){
-                                var options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'};
+                                var options = { weekday: 'long', year: 'numeric', 
+                                                month: 'short', day: 'numeric', hour: '2-digit', 
+                                                minute: '2-digit'};
                                 item.creationtimeformatted = new Date(parseInt(item.creationtime)*1000)
                                                                     .toLocaleDateString("en-US", options);
+                                // check job state
+                                var totalJobs = parseInt(item.total);
+                                var completeJobs = parseInt(item.completed);
+                                var failedJobs = parseInt(item.failed);
+                                var pendingJobs = parseInt(item.pending);
+                                item.completedPercentage = completeJobs + "/" + totalJobs;
+                                item.failedPercentage = failedJobs + "/" + totalJobs;
+                                item.pendingPercentage = pendingJobs + "/" + totalJobs;
+                                if(totalJobs == completeJobs)
+                                        item.state = 'COMPLETED';   
                                 $scope.expGridOptions.data.push(item);                                
                             });
                         }
@@ -77,7 +92,8 @@ angular.module('nimrod-portal.experiment-manager', [])
                     },
                     function (error) {
                         $scope.loading = false;
-                        console.log("Error:" + error);
+                        console.log("Error @ listExperiments");
+                        console.log(error);
                         $scope.broadcastMessage("Could not get experiment list");
                     }
                 );

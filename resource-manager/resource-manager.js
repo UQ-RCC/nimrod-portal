@@ -73,11 +73,13 @@ angular.module('nimrod-portal.resource-manager', [])
                                                     .replace(/\"{/g, "{")
                                                     .replace(/}\"/g, "}");
                                 var resJson = JSON.parse(resourceConfig);
-                                item.machine = MiscFactory.getMachineName(resJson.hpcargs[1]);
-                                item.ncpu = resJson.ncpus;
-                                item.mem = resJson.mem/(1024*1024*1024); // to Gbs
-                                item.walltime = resJson.walltime/3600.0;
-                                item.account = resJson.account;
+                                if(item.type==="hpc"){
+                                    item.machine = MiscFactory.getMachineName(resJson.hpcargs[1]);
+                                    item.ncpu = resJson.ncpus;
+                                    item.mem = resJson.mem/(1024*1024*1024); // to Gbs
+                                    item.walltime = resJson.walltime/3600.0;
+                                    item.account = resJson.account;
+                                }
                                 $scope.resGridOptions.data.push(item);                                
                             });
                         }
