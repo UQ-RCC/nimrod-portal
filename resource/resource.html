@@ -24,7 +24,7 @@
 
 	    	<md-input-container class="md-block" flex>
 	    		<label>Account</label>
-				<md-select ng-disabled="!newRes" name="account" ng-model="resource.account" aria-label="account" ng-pattern="/^[a-zA-Z0-9_]+$/" required>
+				<md-select ng-disabled="!newRes" name="account" ng-model="resource.account" aria-label="account" ng-pattern="/^[a-zA-Z0-9-_]+$/" required>
 		          	<md-option ng-value="account.group" ng-repeat="account in accounts" ng-selected="account.group==resource.account">
 		            {{ account.group }}
 		          </md-option>

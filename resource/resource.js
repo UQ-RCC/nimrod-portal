@@ -140,7 +140,8 @@ angular.module('nimrod-portal.resource', [])
                     },
                     function (error) {
                         $scope.loading = false;
-                        console.log("Error:" + error);
+                        console.log("Error:");
+                        console.log(error);
                         $scope.broadcastMessage("Fail to add resource. Error:" + error);
                     }
                 );
