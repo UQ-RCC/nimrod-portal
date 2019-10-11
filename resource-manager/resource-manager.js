@@ -40,11 +40,13 @@ angular.module('nimrod-portal.resource-manager', [])
                 showGridFooter: false,
                 data: [],
                 columnDefs: [
-                  { field: 'name', displayName: 'Name', width: '30%', headerTooltip: 'Resource Name' },
-                  { field: 'machine', displayName: 'Machine', width: '25%', headerTooltip: 'HPC Machine'},
-                  { field: 'ncpu', displayName: 'Ncpu', width: '15%', headerTooltip: 'Number of CPUs'},
-                  { field: 'mem', displayName: 'Memory', width: '15%', headerTooltip: 'Memory (in Gbs)'},
-                  { field: 'walltime', displayName: 'Walltime', width: '15%', headerTooltip: 'Walltime (in hours)'}
+                  { field: 'name', displayName: 'Name', width: '20%', headerTooltip: 'Resource Name' },
+                  { field: 'machine', displayName: 'Machine', width: '20%', headerTooltip: 'HPC Machine'},
+                  { field: 'nbatch', displayName: 'Total batches', width: '15%', headerTooltip: 'Total number of job batches'},
+                  { field: 'batchsize', displayName: 'Batch size', width: '15%', headerTooltip: 'Number of jobs in a batch'},
+                  { field: 'walltime', displayName: 'Walltime', width: '10%', headerTooltip: 'Batch walltime (in hours)'},
+                  { field: 'ncpu', displayName: 'Ncpu', width: '10%', headerTooltip: 'Number of CPUs per job'},
+                  { field: 'mem', displayName: 'Memory', width: '10%', headerTooltip: 'Memory (in Gbs) per job'}
                 ],
                 onRegisterApi: function( gridApi ) {
                     $scope.gridApi = gridApi;
@@ -73,12 +75,16 @@ angular.module('nimrod-portal.resource-manager', [])
                                                     .replace(/\"{/g, "{")
                                                     .replace(/}\"/g, "}");
                                 var resJson = JSON.parse(resourceConfig);
+                                console.log(resJson);
                                 if(item.type==="hpc"){
-                                    item.machine = MiscFactory.getMachineName(resJson.hpcargs[1]);
+                                    item.machine = MiscFactory.getMachineName(resJson.server);
                                     item.ncpu = resJson.ncpus;
                                     item.mem = resJson.mem/(1024*1024*1024); // to Gbs
                                     item.walltime = resJson.walltime/3600.0;
                                     item.account = resJson.account;
+                                    item.limit = resJson.limit;
+                                    item.batchsize = resJson.max_batch_size;
+                                    item.nbatch = Math.ceil(item.limit/item.batchsize);
                                 }
                                 $scope.resGridOptions.data.push(item);                                
                             });

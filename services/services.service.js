@@ -51,9 +51,9 @@ angular.
     };
 
     methods.getMachineName = function(managementNode){
+      // this is not needed
       var managementNodeWithoutAt = managementNode.replace(/@/g, "");
       var machines = methods.availableMachines();
-      console.log(managementNodeWithoutAt);
       for(var i =0; i< machines.length; i++){
         if (machines[i].value === managementNodeWithoutAt)
           return machines[i].label;

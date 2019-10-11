@@ -218,7 +218,7 @@ angular.module('nimrod-portal.experiment', [])
                                                     .replace(/}\"/g, "}");
                                 var resJson = JSON.parse(resourceConfig);
                                 if(item.type==="hpc"){
-                                    item.machine = MiscFactory.getMachineName(resJson.hpcargs[1]);
+                                    item.machine = MiscFactory.getMachineName(resJson.server);
                                     item.ncpu = resJson.ncpus;
                                     item.mem = resJson.mem/(1024*1024*1024); // to Gbs
                                     item.walltime = resJson.walltime/3600.0;

@@ -73,7 +73,7 @@ angular.module('nimrod-portal.resource', [])
                                         //console.log(resJson);
                                         $scope.resource = {
                                             'resname': resourcename,
-                                            'machine': resJson.hpcargs[1],
+                                            'machine': resJson.server,
                                             'ncpu': resJson.ncpus,
                                             'mem': resJson.mem/(1024*1024*1024), // to Gbs
                                             'hour': resJson.walltime/3600.0,
@@ -81,12 +81,7 @@ angular.module('nimrod-portal.resource', [])
                                             'maxbatch': resJson.max_batch_size,
                                             'account': resJson.account
                                         };
-                                        for (var i = 0; i < resJson.hpcargs.length-1; i++) {
-                                            if(resJson.hpcargs[i]=='-q'){
-                                                $scope.resource.machine = resJson.hpcargs[i+1].split('@')[1];
-                                            }
-                                            //Do something
-                                        }
+                                        $scope.resource.nbatch = Math.ceil($scope.resource.limit/$scope.resource.maxbatch);
                                     }
                                     
                                     $scope.newRes = false;
@@ -115,7 +110,8 @@ angular.module('nimrod-portal.resource', [])
                         'ncpu':2 ,
                         'mem': 2,
                         'hour': 2,
-                        'limit': 2,
+                        'nbatch':2,
+                        'limit': 4,
                         'maxbatch': 2,
                         'account': account
                     };
@@ -134,6 +130,8 @@ angular.module('nimrod-portal.resource', [])
                     return;
                 }
                 $scope.loading = true;
+                // change limit accorindlgy
+                $scope.resource.limit = $scope.resource.nbatch * $scope.resource.maxbatch;
                 ResourcesFactory.addResource.add($scope.resource).$promise.then(
                     function() {
                         $location.path("/resource-manager");

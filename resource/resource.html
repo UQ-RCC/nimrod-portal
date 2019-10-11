@@ -38,7 +38,7 @@
 
 		</div>
 		
-		
+		<md-subheader class="md-primary">Job specifications</md-subheader>
         <div flex layout="row">
 	    	<md-input-container class="md-block" flex="20%">
 				<label>NCPUs</label>
@@ -58,7 +58,31 @@
 	          		</div>
 		        </div>  
 			</md-input-container>
-	        <md-input-container class="md-block" flex>
+        </div>
+
+        <md-subheader class="md-primary">Batch specifications</md-subheader>
+		<div flex layout="row">
+			<md-input-container class="md-block" flex>
+				<label>Batchsize</label>
+				<input type="number" ng-disabled="!newRes" name="batchsize" ng-model="resource.maxbatch" min="1"/>
+				<div ng-messages="resourceForm.batchsize.$error">
+					<div ng-message="min">
+	            		Minimum must be 1.
+	          		</div>
+		        </div>  
+			</md-input-container>
+
+	        <md-input-container class="md-block" flex="50%">
+				<label>Number of batches</label>
+				<input type="number" ng-disabled="!newRes" name="nbatch" ng-model="resource.nbatch" min="1"/>
+				<div ng-messages="resourceForm.nbatch.$error">
+					<div ng-message="min">
+	            		Minimum must be 1.
+	          		</div>
+		        </div>  
+			</md-input-container>
+
+			<md-input-container class="md-block" flex>
 				<label>Walltime (hours)</label>
 				<input type="number" ng-disabled="!newRes" name="walltime" ng-model="resource.hour" min="1"/>
 				<div ng-messages="resourceForm.walltime.$error">
@@ -67,28 +91,8 @@
 	          		</div>
 		        </div>  
 			</md-input-container>
-        </div>
-
-		<div flex layout="row">
-	        <md-input-container class="md-block" flex="50%">
-				<label>Maximum number of Nimrod agents</label>
-				<input type="number" ng-disabled="!newRes" name="limit" ng-model="resource.limit" min="1"/>
-				<div ng-messages="resourceForm.limit.$error">
-					<div ng-message="min">
-	            		Minimum must be 1.
-	          		</div>
-		        </div>  
-			</md-input-container>
-
-	        <md-input-container class="md-block" flex>
-				<label>Maximum batch size for Nimrod agents</label>
-				<input type="number" ng-disabled="!newRes" name="batchsize" ng-model="resource.maxbatch" min="1"/>
-				<div ng-messages="resourceForm.batchsize.$error">
-					<div ng-message="min">
-	            		Minimum must be 1.
-	          		</div>
-		        </div>  
-			</md-input-container>
+			
+	        
 		</div>
 		
 		<div layout-margin layout="row" layout-align="center">

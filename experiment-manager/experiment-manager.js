@@ -40,13 +40,14 @@ angular.module('nimrod-portal.experiment-manager', [])
                 showGridFooter: false,
                 data: [],
                 columnDefs: [
-                  { field: 'name', displayName: 'Name', width: '20%', headerTooltip: 'Experiment Name' },
-                  { field: 'state', displayName: 'State', width: '12%', headerTooltip: 'Experiment State'},
+                  { field: 'name', displayName: 'Name', width: '16%', headerTooltip: 'Experiment Name' },
+                  { field: 'state', displayName: 'State', width: '11%', headerTooltip: 'Experiment State'},
                   { field: 'completed', displayName: 'Completed', width:'11%', headerTooltip: 'Number of completed jobs'},
-                  { field: 'failed', displayName: 'Failed', width:'11%', headerTooltip: 'Number of failed jobs'},
-                  { field: 'pending', displayName: 'Pending', width:'11%', headerTooltip: 'Number of pending jobs'},
-                  { field: 'total', displayName: 'Total', width:'11%', headerTooltip: 'Number of total jobs'},
-                  { field: 'creationtimeformatted', width: '24%', displayName: 'Created'}
+                  { field: 'failed', displayName: 'Failed', width:'10%', headerTooltip: 'Number of failed jobs'},
+                  { field: 'running', displayName: 'Running', width:'10%', headerTooltip: 'Number of pending jobs'},
+                  { field: 'pending', displayName: 'Pending', width:'10%', headerTooltip: 'Number of pending jobs'},
+                  { field: 'total', displayName: 'Total', width:'10%', headerTooltip: 'Number of total jobs'},
+                  { field: 'creationtimeformatted', width: '22%', displayName: 'Created'}
                 ],
                 onRegisterApi: function( gridApi ) {
                     $scope.gridApi = gridApi;
@@ -80,9 +81,7 @@ angular.module('nimrod-portal.experiment-manager', [])
                                 var completeJobs = parseInt(item.completed);
                                 var failedJobs = parseInt(item.failed);
                                 var pendingJobs = parseInt(item.pending);
-                                item.completedPercentage = completeJobs + "/" + totalJobs;
-                                item.failedPercentage = failedJobs + "/" + totalJobs;
-                                item.pendingPercentage = pendingJobs + "/" + totalJobs;
+                                var runningJobs = parseInt(item.running);
                                 if(totalJobs == completeJobs)
                                         item.state = 'COMPLETED';   
                                 $scope.expGridOptions.data.push(item);                                
