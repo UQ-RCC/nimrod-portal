@@ -60,6 +60,15 @@ angular.module('nimrod-portal.services')
     return resources;
 
   }])
+  .factory('UserFactory', ['$resource', 'settings', 'TokenHandler', function($resource, settings, tokenHandler) {
+    var resources = {};
+
+    resources.provision = $resource(settings.URLs.serverApiBase + 'user/:username', {'username':'@username'}, {
+     put: tokenHandler.wrapConfig({ method: 'PUT', isArray: false})
+    });
+
+    return resources;
+  }])
   .factory('UserPreferenceFactory', ['$resource', 'settings', function ($resource, settings) {
     return $resource(settings.URLs.apiBase + 'preference/nimrod', {}, {
       get: { method: 'GET', isArray: false },

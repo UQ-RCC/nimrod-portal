@@ -56,9 +56,9 @@ angular.module('nimrod-portal', [
         'maxRetryOnServerError': 1
     })
     .controller('AppCtrl', ['$mdToast', '$rootScope', '$scope', '$interval', '$window', '$mdDialog',
-        'settings','$location', 'SessionFactory', 'TokenHandler',
+        'settings','$location', 'SessionFactory', 'TokenHandler', 'UserFactory',
         function ($mdToast, $rootScope, $scope, $interval, $window, $mdDialog, 
-        settings, $location, SessionFactory, TokenHandler) {
+        settings, $location, SessionFactory, TokenHandler, UserFactory) {
             $rootScope.$on('notify', function (event, message) {
             $mdToast.show(
                 $mdToast.simple()
@@ -103,6 +103,10 @@ angular.module('nimrod-portal', [
         var onLoginWindowClose = function() {
             SessionFactory.sessionInfo.get({}, function(data) {
                 if (data.has_oauth_access_token === "true") {
+                    // FIXME: Call the provision endpoint. Do properly when
+                    // web dev gets back.
+                    UserFactory.provision.put({username: data.uname});
+
                     document.getElementById("home-btn").style.display="none";
                     document.getElementById("login").style.display="none";
                     document.getElementById("logout-btn").style.display="block";
