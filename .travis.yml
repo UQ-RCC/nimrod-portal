@@ -1,15 +1,26 @@
 language: node_js
 node_js:
   - "7"
-script: npm install && mkdir artefacts && tar -zcvf  artefacts/nimrodportal-$(git describe --tags --abbrev=0).tar.gz --exclude=./artefacts .
+
+script:
+  - npm install
+  - mkdir artifacts
+  - |
+    GIT_DESCRIBE=$(git describe --tags --abbrev=0)
+    tar -czf artifacts/nimrod-portal-${GIT_DESCRIBE}.tar.gz \
+      --transform "s/^\./nimrod-portal-${GIT_DESCRIBE}/" \
+      --exclude=./artifacts \
+      --exclude=./.git \
+      .
+
 install: true
 deploy:
   provider: releases
   api_key:
-    secure: "zPNygDu6iqfM+raeMGV1Fgsm6o86VumXKOShbNnWvuVHsqDn99V2Hxav/Yov1Plw4nsYpJzgMcJhk1YSIYkL3TzNUYa9tl1FSGsJFfbdERZoWDsa48CUJ3f/mkhWcIOj8eZx4r9sGgVC3i6+nmAPiFiC8QsmkFX5LXsycffE7n4DH6zqJVoMoiEWl5svseo43ykIbWeTgDEw6V1+egry5txkrahjIJzjIADhNLdlzQZ0P99AHTHQI2btbTrlwq0XPitFROL3VqMpNW3fNvTDtIdQ4VBA8+VbyQuecbN9tqW0P2pL0CkWejH1yrzxSgJzhR4QwkZ8A1IP+5Obkzn7aRT7qp5InKW6KiW4Q2zZHXqjG/7aH5SFXybzS98KSo3Djrr+1/b5xtogQRVPBcSicFQWsKJ5Q4MmzMDDcXB6qIpTpKzkb8GE5BozpFnxRAInbgF/vKir90Mesgdr8jAJQetTsE3zZ256sGwmfcXEo4DRnPdDYN4LoVdB4qpL3cDuvTL/IkEa+1uMc//PzDRx/HIsSTFJknn5VC7xnOMsmslah/O9cq6emKgd1AseL9837vrMi3mNWapZlG7fTABfCr9V0W9df4r6NXaAFdZcwmPuMuvD/G1pfvwcWjmnottX49RKQoyoW9vYQj1DXWCsYLkUh/RqXQ/ih6FQ70C56dw="
+    secure: gSIKD0EVDLmfzkbn6HzGpOyHbUBekyYbMSh/xLeuo6B9ywnl57GY0WcTziaky9GypXzVMb7IcpNeTYsaKGDpuQoQ+o2Nke/u3J/oGeasvFwIVEnaLd1B2mrwB1EL81LLS5P0ngJwxF9CNvSc5L0GMRgCL1bqkMjBAKtq9fgRvLv/J/I5ACsr+JOVj1PUCVMp6N59AkDySXP8lCGTou09zq54K2Cget1RchTE4oekOfWV5X2OGHnXBmKlCGayKb0Bmi5RjlfRxfECC/UHjo7jd92WjXXyvYBLCzPqfWuz4gM6VW+pvYHLfo/wEmMCPsdKAWxyryCotjbwS1AnqDo0So4BGQXtxtT29dgpB04RfLNjvBOBrQZ7Yu8rbu4xAd1MgnlJhzoEmaJioMtY4Mrs4gVUjjnKnuJKFJpX6FsV+zFWiqQMoslF0sQ8wKgtGn8f7TmDi89MKzFvvFOemkPges8JTGegJtVU34Sns3iVyP1RJskwE56YAiEcDnYo3Qe1luJirAhpOjZ/RikjQz76xX3+7fbEJ82eCLn/+tcWJ+euiBdRsRHCR6gPeBrG7k1d/6U7kzPvHQnOJSLi2lJ2GjVldSj2ER5h8biVEmWAIq1k07Cea8eZLv5KYaD+hPIIjCmec6JxF99zKGqTuOx3xiBJfcqyyPJNut2RvzzuUwo=
   skip_cleanup: true
   file_glob: true
-  file: artefacts/nimrodportal-*.tar.gz
+  file: artifacts/nimrod-portal-*.tar.gz
   draft: false
   overwrite: true
   on:
