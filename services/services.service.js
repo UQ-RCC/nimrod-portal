@@ -63,7 +63,7 @@ angular.module('nimrod-portal.services')
   .factory('UserFactory', ['$resource', 'settings', 'TokenHandler', function($resource, settings, tokenHandler) {
     var resources = {};
 
-    resources.provision = $resource(settings.URLs.serverApiBase + 'user/:username', {'username':'@username'}, {
+    resources.provision = $resource(settings.URLs.serverApiBase + 'provision/:username', {'username':'@username'}, {
      put: tokenHandler.wrapConfig({ method: 'PUT', isArray: false})
     });
 
@@ -79,39 +79,39 @@ angular.module('nimrod-portal.services')
     var resources = {};
 
     // list folder
-    resources.listFolder = $resource(settings.URLs.serverApiBase + settings.URLs.listFolderBase64, {}, {
+    resources.listFolder = $resource(settings.URLs.resourceApiBase + settings.URLs.listFolderBase64, {}, {
       query: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
 
     // delete files
-    resources.deleteFiles = $resource(settings.URLs.serverApiBase + settings.URLs.deleteBase64, {}, {
+    resources.deleteFiles = $resource(settings.URLs.resourceApiBase + settings.URLs.deleteBase64, {}, {
       delete: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
 
     //copy files
-    resources.copyFiles = $resource(settings.URLs.serverApiBase + settings.URLs.copyBase64, {}, {
+    resources.copyFiles = $resource(settings.URLs.resourceApiBase + settings.URLs.copyBase64, {}, {
       copy: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
 
     // move files
-    resources.moveFiles = $resource(settings.URLs.serverApiBase + settings.URLs.moveBase64, {}, {
+    resources.moveFiles = $resource(settings.URLs.resourceApiBase + settings.URLs.moveBase64, {}, {
       move: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
 
     // list copying process
-    resources.listCopyingProcess = $resource(settings.URLs.serverApiBase + settings.URLs.listCopyingProcess, {}, {
+    resources.listCopyingProcess = $resource(settings.URLs.resourceApiBase + settings.URLs.listCopyingProcess, {}, {
       list: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
 
     // accessible locations
-    resources.accessibleLocations = $resource(settings.URLs.serverApiBase + settings.URLs.accessibleLocations, {}, {
+    resources.accessibleLocations = $resource(settings.URLs.resourceApiBase + settings.URLs.accessibleLocations, {}, {
       query: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
 
     return resources;
   }])
   .factory('GetProjectsFactory', ['$resource', 'TokenHandler', 'settings', function ($resource, tokenHandler, settings) {
-    var resource = $resource(settings.URLs.serverApiBase + settings.URLs.getProjects, {}, {
+    var resource = $resource(settings.URLs.resourceApiBase + settings.URLs.getProjects, {}, {
       query: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
     return resource;
@@ -120,52 +120,52 @@ angular.module('nimrod-portal.services')
     var resources = {};
 
     // list experiments
-    resources.getExperiments = $resource(settings.URLs.serverApiBase + settings.URLs.getExperiments, {}, {
+    resources.getExperiments = $resource(settings.URLs.resourceApiBase + settings.URLs.getExperiments, {}, {
       query: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
 
     //delete experiment
-    resources.deleteExperiment = $resource(settings.URLs.serverApiBase + settings.URLs.deleteExperiment, {}, {
+    resources.deleteExperiment = $resource(settings.URLs.resourceApiBase + settings.URLs.deleteExperiment, {}, {
       delete: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
 
     //add experiment
-    resources.addExperiment = $resource(settings.URLs.serverApiBase + settings.URLs.addExperiment, {}, {
+    resources.addExperiment = $resource(settings.URLs.resourceApiBase + settings.URLs.addExperiment, {}, {
       add: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
 
     //start experiment
-    resources.startExperiment = $resource(settings.URLs.serverApiBase + settings.URLs.startExperiment, {}, {
+    resources.startExperiment = $resource(settings.URLs.resourceApiBase + settings.URLs.startExperiment, {}, {
       start: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
 
     //validate plan file
-    resources.validatePlanFile = $resource(settings.URLs.serverApiBase + settings.URLs.compilePlanfile, {}, {
+    resources.validatePlanFile = $resource(settings.URLs.resourceApiBase + settings.URLs.compilePlanfile, {}, {
       verify: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
 
     //validate plan file
-    resources.planfile = $resource(settings.URLs.serverApiBase + settings.URLs.readPlanFile, {}, {
+    resources.planfile = $resource(settings.URLs.resourceApiBase + settings.URLs.readPlanFile, {}, {
       read: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
 
     //get assignments
-    resources.assignments = $resource(settings.URLs.serverApiBase + settings.URLs.getAssignments, {}, {
+    resources.assignments = $resource(settings.URLs.resourceApiBase + settings.URLs.getAssignments, {}, {
       query: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
 
     //get assignments
-    resources.assignResource = $resource(settings.URLs.serverApiBase + settings.URLs.assignResource, {}, {
+    resources.assignResource = $resource(settings.URLs.resourceApiBase + settings.URLs.assignResource, {}, {
       assign: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
 
     //get assignments
-    resources.unassignResource = $resource(settings.URLs.serverApiBase + settings.URLs.unassignResource, {}, {
+    resources.unassignResource = $resource(settings.URLs.resourceApiBase + settings.URLs.unassignResource, {}, {
       unassign: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
 
     //check process
-    resources.checkProcess = $resource(settings.URLs.serverApiBase + settings.URLs.checkProcess, {}, {
+    resources.checkProcess = $resource(settings.URLs.resourceApiBase + settings.URLs.checkProcess, {}, {
       check: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
 
@@ -175,17 +175,17 @@ angular.module('nimrod-portal.services')
     var resources = {};
 
     // get all resources
-    resources.getResources = $resource(settings.URLs.serverApiBase + settings.URLs.getResources, {}, {
+    resources.getResources = $resource(settings.URLs.resourceApiBase + settings.URLs.getResources, {}, {
       query: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
 
     //add resource
-    resources.addResource = $resource(settings.URLs.serverApiBase + settings.URLs.addResource, {}, {
+    resources.addResource = $resource(settings.URLs.resourceApiBase + settings.URLs.addResource, {}, {
       add: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
 
     //delete resource
-    resources.deleteResource = $resource(settings.URLs.serverApiBase + settings.URLs.deleteResource, {}, {
+    resources.deleteResource = $resource(settings.URLs.resourceApiBase + settings.URLs.deleteResource, {}, {
       delete: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
     return resources;

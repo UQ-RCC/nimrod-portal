@@ -25,13 +25,14 @@ angular.module('nimrod-portal', [
         }])
     .constant('settings', {
         'URLs': {
-            'base': 'https://nimrod.rcc.uq.edu.au/client/',
-            'apiBase': 'https://nimrod.rcc.uq.edu.au/client/api/',
+            'base': '/client/',
+            'apiBase': '/client/api/',
             'oauthStart': 'login',
             'logout': 'end_session',
             'sessionInfo': 'session_info?service=nimrod',
             'accessToken': 'access_token?service=nimrod',
-            'serverApiBase': 'https://nimrod.rcc.uq.edu.au/nimbackend/api/',
+            'resourceApiBase': 'https://backend.nimrod-portal.cloud.edu.au/resource/api/',
+            'serverApiBase': 'https://backend.nimrod-portal.cloud.edu.au/nimrod/api/',
             'listFolderBase64': 'execute/listfolderbase64',
             'deleteBase64': 'execute/deletebase64',
             'copyBase64': 'execute/copybase64',
