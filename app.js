@@ -25,8 +25,8 @@ angular.module('nimrod-portal', [
         }])
     .constant('settings', {
         'URLs': {
-            'base': '/client/',
-            'apiBase': '/client/api/',
+            'base': 'https://nimrod.rcc.uq.edu.au/client/',
+            'apiBase': 'https://nimrod.rcc.uq.edu.au/client/api/',
             'oauthStart': 'login',
             'logout': 'end_session',
             'sessionInfo': 'session_info?service=nimrod',
