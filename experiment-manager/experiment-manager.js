@@ -26,7 +26,7 @@ angular.module('nimrod-portal.experiment-manager', [])
                 document.getElementById("resmanager").className="menu__link";
                 document.getElementById("filesmanagermgr").style.display="block";
                 document.getElementById("filesmanagermgr").className="menu__link";
-                listExperiments();
+		listExperiments();
                 expRefreshTimer=$interval(listExperiments,20000);
             });
 
@@ -64,6 +64,10 @@ angular.module('nimrod-portal.experiment-manager', [])
             * List all the eperiments
             */
             var listExperiments = function(){
+		// if there is a request, return
+                if($scope.loading){
+                    return;
+		}
                 $scope.loading = true;
                 ExperimentsFactory.getExperiments.query().$promise.then(
                     function(returnData) {

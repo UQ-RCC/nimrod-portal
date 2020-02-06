@@ -63,7 +63,8 @@ angular.module('nimrod-portal.resource-manager', [])
             * List all the resources
             */
             var listResources = function(){
-                $scope.loading = true;
+                if ($scope.loading)
+                    return;
                 ResourcesFactory.getResources.query().$promise.then(
                     function(returnData) {
                         if(returnData.commandResult.length > 0){
