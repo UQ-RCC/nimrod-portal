@@ -5,22 +5,13 @@
 		<md-tab id="planfile" label="Planfile">
 			<md-content class="md-padding">
 				<form name="expForm" ng-submit="createExperiment()" flex layout-margin> 
-					<md-input-container class="md-block">
-						<label>Experiment Name</label>
-						<input type="text" ng-disabled="!newExperiment || loading" name="expname_field" ng-model="experiment.expname" ng-pattern="/^[a-zA-Z0-9_]+$/" required flex/> 
-						<div ng-messages="expForm.expname_field.$error">
-							<div ng-message="pattern">
-			            		Invalid experiment name. /^[a-zA-Z0-9_]+$/.
-			          		</div>
-				        </div>
-				    </md-input-container>
 					<!--span ng-show="expForm.expname_field.$error.pattern">Invalid Experiment name!</span-->
-					<label>Plan File</label>
 					<div layout="row" flex>
 						<div ui-ace="{
-							require: ['ace/ext/language_tools'],
+							require: ['ace/ext/language_tools', '.'],
 						  	useWrapMode : true,
-						  	showGutter: true,
+							showGutter: true,
+							mode: 'planfile',  
 						  	theme:'twilight',
 						  	onLoad: aceLoaded,
 						  	onChange: aceChanged,
@@ -35,17 +26,15 @@
 						flex="80"></div>
 						<div layout="column" flex>
 							<md-list flex>
-			        			<md-subheader class="md-no-sticky">Insert</md-subheader>
-			        			<md-list-item class="secondary-button-padding">
-			   						<md-button ng-disabled="!newExperiment || loading" ng-click="checkAndSubmit()">Parameter</md-button>
-			  					</md-list-item>
-			  					<md-list-item class="secondary-button-padding">
-			   						<md-button ng-disabled="!newExperiment || loading" ng-click="checkAndSubmit()">Task</md-button>
-			  					</md-list-item>
-			  					<md-list-item class="secondary-button-padding">
-			   						<md-button ng-disabled="!newExperiment || loading" ng-click="checkAndSubmit()">Command</md-button>
-			  					</md-list-item>
-
+								<md-input-container class="md-block">
+									<label>Experiment Name</label>
+									<input type="text" ng-disabled="!newExperiment || loading" name="expname_field" ng-model="experiment.expname" ng-pattern="/^[a-zA-Z0-9_]+$/" required flex/> 
+									<div ng-messages="expForm.expname_field.$error">
+										<div ng-message="pattern">
+											Invalid experiment name. /^[a-zA-Z0-9_]+$/.
+										  </div>
+									</div>
+								</md-input-container>			
 								<md-divider></md-divider>
 								<md-list-item class="secondary-button-padding">
 			   						<md-button ng-disabled="experiment.validated || loading" ng-click="validatePln()">Validate</md-button>
