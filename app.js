@@ -149,7 +149,7 @@ angular.module('nimrod-portal', [
         $scope.sessionRefreshTimer = $interval(function(){
                                                 console.log("....Checking session....");
                                                 $scope.checkSession();
-                                            },300000);// every 5 minutes
+                                            },60000);// every 1 minutes
         $scope.checkSession = function(onValidAccessTokenCallback){
             SessionFactory.sessionInfo.get({}, function(data) {
                 if (data.has_oauth_access_token !== "true") {
