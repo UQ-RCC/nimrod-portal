@@ -102,10 +102,8 @@ angular.module('nimrod-portal', [
         var onLoginWindowClose = function() {
             SessionFactory.sessionInfo.get({}, function(data) {
                 if (data.has_oauth_access_token === "true") {
-                    // FIXME: Call the provision endpoint. Do properly when
-                    // web dev gets back.
+                    $scope.checkSession();
                     UserFactory.provision.put({username: data.uname});
-
                     document.getElementById("home-btn").style.display="none";
                     document.getElementById("login").style.display="none";
                     document.getElementById("logout-btn").style.display="block";
