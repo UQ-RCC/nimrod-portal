@@ -10,3 +10,9 @@
 
 
 .ace_editor { height: 450px; }
+
+.editor_error {
+  position:absolute;
+  background:rgba(241, 9, 9, 0.5);
+  z-index:20
+}

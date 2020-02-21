@@ -120,18 +120,13 @@ angular.module('nimrod-portal.services')
     var resources = {};
 
     // list experiments
-    resources.getExperiments = $resource(settings.URLs.resourceApiBase + settings.URLs.getExperiments, {}, {
-      query: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
-    });
-
-    //delete experiment
-    resources.deleteExperiment = $resource(settings.URLs.resourceApiBase + settings.URLs.deleteExperiment, {}, {
-      delete: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
+    resources.getExperiments = $resource(settings.URLs.serverApiBase + settings.URLs.experiments, {}, {
+      query: tokenHandler.wrapConfig({ method: 'GET', isArray: true }),
     });
 
     //add experiment
-    resources.addExperiment = $resource(settings.URLs.resourceApiBase + settings.URLs.addExperiment, {}, {
-      add: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
+    resources.addExperiment = $resource(settings.URLs.serverApiBase + settings.URLs.experiments, {}, {
+      add: tokenHandler.wrapConfig({ method: 'POST', isArray: false }),
     });
 
     //start experiment
@@ -140,28 +135,8 @@ angular.module('nimrod-portal.services')
     });
 
     //validate plan file
-    resources.validatePlanFile = $resource(settings.URLs.resourceApiBase + settings.URLs.compilePlanfile, {}, {
+    resources.validatePlanFile = $resource(settings.URLs.serverApiBase + settings.URLs.compilePlanfile, {}, {
       verify: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
-    });
-
-    //validate plan file
-    resources.planfile = $resource(settings.URLs.resourceApiBase + settings.URLs.readPlanFile, {}, {
-      read: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
-    });
-
-    //get assignments
-    resources.assignments = $resource(settings.URLs.resourceApiBase + settings.URLs.getAssignments, {}, {
-      query: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
-    });
-
-    //get assignments
-    resources.assignResource = $resource(settings.URLs.resourceApiBase + settings.URLs.assignResource, {}, {
-      assign: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
-    });
-
-    //get assignments
-    resources.unassignResource = $resource(settings.URLs.resourceApiBase + settings.URLs.unassignResource, {}, {
-      unassign: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
 
     //check process
@@ -171,22 +146,28 @@ angular.module('nimrod-portal.services')
 
     return resources;
   }])
+  .factory('ExperimentFactory', ['$resource', 'TokenHandler', 'settings', function ($resource, tokenHandler, settings) {
+      return $resource(settings.URLs.serverApiBase + settings.URLs.experiments + '/:name', {}, {
+          show: tokenHandler.wrapConfig({ method: 'GET' }),
+          delete: tokenHandler.wrapConfig( { method: 'DELETE', params: {name: '@name'} })
+      });
+  }])
+  .factory('AssignmentFactory', ['$resource', 'TokenHandler', 'settings', function ($resource, tokenHandler, settings) {
+    return $resource(settings.URLs.serverApiBase + settings.URLs.experiments + '/:name' + '/resources', {}, {
+        show: tokenHandler.wrapConfig({ method: 'GET', isArray: true }),
+        assign: tokenHandler.wrapConfig({ method: 'PUT', params: {name: '@name'} })
+    });
+  }])
   .factory('ResourcesFactory', ['$resource', 'TokenHandler', 'settings', function ($resource, tokenHandler, settings) {
-    var resources = {};
-
-    // get all resources
-    resources.getResources = $resource(settings.URLs.resourceApiBase + settings.URLs.getResources, {}, {
-      query: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
+    return $resource(settings.URLs.serverApiBase + settings.URLs.resources , {}, {
+      show: tokenHandler.wrapConfig({ method: 'GET', isArray: true }),
+      create: tokenHandler.wrapConfig({ method: 'POST'})
     });
-
-    //add resource
-    resources.addResource = $resource(settings.URLs.resourceApiBase + settings.URLs.addResource, {}, {
-      add: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
+  }])
+  .factory('ResourceFactory', ['$resource', 'TokenHandler', 'settings', function ($resource, tokenHandler, settings) {
+    return $resource(settings.URLs.serverApiBase + settings.URLs.resources + '/:name', {}, {
+        show: tokenHandler.wrapConfig({ method: 'GET' }),
+        delete: tokenHandler.wrapConfig({ method: 'DELETE', params: {name: '@name'} })
     });
-
-    //delete resource
-    resources.deleteResource = $resource(settings.URLs.resourceApiBase + settings.URLs.deleteResource, {}, {
-      delete: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
-    });
-    return resources;
-  }]);
+}])
+  ;

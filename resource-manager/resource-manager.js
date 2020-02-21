@@ -11,9 +11,9 @@ angular.module('nimrod-portal.resource-manager', [])
 
 
     .controller('ResourceManagerCtrl', ['$scope', '$location', '$mdDialog',
-        'ResourcesFactory', 'MiscFactory',
+        'ResourcesFactory', 'MiscFactory', 'ResourceFactory', 
         function ($scope, $location, $mdDialog,
-            ResourcesFactory, MiscFactory) {
+            ResourcesFactory, MiscFactory, ResourceFactory) {
             $scope.loading = false;
             $scope.checkSession(function(){
                 document.getElementById("home-btn").style.display="none";
@@ -65,37 +65,38 @@ angular.module('nimrod-portal.resource-manager', [])
             var listResources = function(){
                 if ($scope.loading)
                     return;
-                ResourcesFactory.getResources.query().$promise.then(
+                ResourcesFactory.show().$promise.then(
                     function(returnData) {
-                        if(returnData.commandResult.length > 0){
+                        console.log(returnData);
+                        if(returnData.length > 0){
                             $scope.resGridOptions.data = [];
-                            returnData.commandResult.forEach(function (item){
-                                // parse string to a json
-                                var resourceConfig = item.jsonconfig
-                                                    .replace(/\"\"/g, "\"")
-                                                    .replace(/\"{/g, "{")
-                                                    .replace(/}\"/g, "}");
-                                var resJson = JSON.parse(resourceConfig);
-                                console.log(resJson);
+                            returnData.forEach(function (item){
+                                console.log(item.server);
+                                console.log(item);
+                                var resource = {};
                                 if(item.type==="hpc"){
-                                    item.machine = MiscFactory.getMachineName(resJson.server);
-                                    item.ncpu = resJson.ncpus;
-                                    item.mem = resJson.mem/(1024*1024*1024); // to Gbs
-                                    item.walltime = resJson.walltime/3600.0;
-                                    item.account = resJson.account;
-                                    item.limit = resJson.limit;
-                                    item.batchsize = resJson.max_batch_size;
-                                    item.nbatch = Math.ceil(item.limit/item.batchsize);
+                                    resource.name = item.name;
+                                    resource.machine = MiscFactory.getMachineName(item.config.server);
+                                    resource.ncpu = item.config.ncpus;
+                                    resource.mem = item.config.mem/(1024*1024*1024); // to Gbs
+                                    resource.walltime = item.config.walltime/3600.0;
+                                    resource.account = item.config.account;
+                                    resource.limit = item.config.limit;
+                                    resource.batchsize = item.config.max_batch_size;
+                                    resource.nbatch = Math.ceil(item.config.limit/item.config.max_batch_size);
                                 }
-                                $scope.resGridOptions.data.push(item);                                
+                                $scope.resGridOptions.data.push(resource);                                
                             });
                         }
                         $scope.loading = false;
                     },
                     function (error) {
                         $scope.loading = false;
-                        console.log("Error:" + error);
-                        $scope.broadcastMessage("Could not get resource list");
+                        console.log(error);
+                        if(error.status==401)
+                            $scope.checkSession();
+                        else
+                            $scope.broadcastMessage("Could not get resource list");
                     }
                 );
             }
@@ -116,7 +117,7 @@ angular.module('nimrod-portal.resource-manager', [])
 
                 $mdDialog.show(confirm).then(function() {
                     $scope.loading = true;
-                    ResourcesFactory.deleteResource.delete({'resname': $scope.selectedItem.name}).$promise.then(
+                    ResourceFactory.delete({'name': $scope.selectedItem.name}).$promise.then(
                         function() {
                             $scope.broadcastMessage("Resource deleted");
                             listResources();

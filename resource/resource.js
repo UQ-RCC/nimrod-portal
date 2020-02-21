@@ -10,9 +10,9 @@ angular.module('nimrod-portal.resource', [])
     }])
 
     .controller('ResourceCtrl', ['$scope', '$location', 
-        'ResourcesFactory', 'GetProjectsFactory', 'MiscFactory', 
+        'ResourcesFactory', 'GetProjectsFactory', 'MiscFactory', 'ResourceFactory',
         function ($scope, $location, 
-            ResourcesFactory, GetProjectsFactory, MiscFactory) {
+            ResourcesFactory, GetProjectsFactory, MiscFactory, ResourceFactory) {
             /*********************************************/
             $scope.accounts = [];
             $scope.availableMachines = MiscFactory.availableMachines();
@@ -59,34 +59,24 @@ angular.module('nimrod-portal.resource', [])
                 var found = false;
                 if(resourcename){
                     $scope.loading = true;
-                    ResourcesFactory.getResources.query().$promise.then(
-                        function(returnData) {
-                            returnData.commandResult.forEach(function(resource){
-                                if(resource.name === resourcename){
-                                    found = true;
-                                    var resourceConfig = resource.jsonconfig
-                                                    .replace(/\"\"/g, "\"")
-                                                    .replace(/\"{/g, "{")
-                                                    .replace(/}\"/g, "}");
-                                    var resJson = JSON.parse(resourceConfig);
-                                    if(resource.type==="hpc"){
-                                        //console.log(resJson);
-                                        $scope.resource = {
-                                            'resname': resourcename,
-                                            'machine': resJson.server,
-                                            'ncpu': resJson.ncpus,
-                                            'mem': resJson.mem/(1024*1024*1024), // to Gbs
-                                            'hour': resJson.walltime/3600.0,
-                                            'limit': resJson.limit,
-                                            'maxbatch': resJson.max_batch_size,
-                                            'account': resJson.account
-                                        };
-                                        $scope.resource.nbatch = Math.ceil($scope.resource.limit/$scope.resource.maxbatch);
-                                    }
-                                    
-                                    $scope.newRes = false;
-                                }
-                            });
+                    ResourceFactory.show({'name': resourcename}).$promise.then(
+                        function(resource) {
+                            found = true;
+                            if(resource.type==="hpc"){
+                                //console.log(resJson);
+                                $scope.resource = {
+                                    'name': resourcename,
+                                    'machine': resource.config.server,
+                                    'ncpu': resource.config.ncpus,
+                                    'mem': resource.config.mem/(1024*1024*1024), // to Gbs
+                                    'hour': resource.config.walltime/3600.0,
+                                    'limit': resource.config.limit,
+                                    'maxbatch': resource.config.max_batch_size,
+                                    'account': resource.config.account
+                                };
+                                $scope.resource.nbatch = Math.ceil($scope.resource.limit/$scope.resource.maxbatch);
+                            }
+                            $scope.newRes = false;
                             $scope.loading = false;
                         },
                         function (error) {
@@ -95,8 +85,6 @@ angular.module('nimrod-portal.resource', [])
                             $scope.broadcastMessage("Could not query resource. Create new one!");
                         }
                     );
-
-                     
                 }
                 // check again
                 if(!found) {
@@ -105,7 +93,7 @@ angular.module('nimrod-portal.resource', [])
                     if($scope.accounts && $scope.accounts.length > 0)
                         account = $scope.accounts[0].group;
                     $scope.resource = {
-                        'resname': '',
+                        'name': '',
                         'machine': $scope.availableMachines[0].value,
                         'ncpu':2 ,
                         'mem': 2,
@@ -132,13 +120,12 @@ angular.module('nimrod-portal.resource', [])
                 $scope.loading = true;
                 // change limit accorindlgy
                 $scope.resource.limit = $scope.resource.nbatch * $scope.resource.maxbatch;
-                ResourcesFactory.addResource.add($scope.resource).$promise.then(
+                ResourcesFactory.create($scope.resource).$promise.then(
                     function() {
                         $location.path("/resource-manager");
                     },
                     function (error) {
                         $scope.loading = false;
-                        console.log("Error:");
                         console.log(error);
                         $scope.broadcastMessage("Fail to add resource. Error:" + error);
                     }

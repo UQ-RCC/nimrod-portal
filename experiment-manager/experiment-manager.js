@@ -10,8 +10,8 @@ angular.module('nimrod-portal.experiment-manager', [])
     }])
 
 
-    .controller('ExperimentManagerCtrl', ['$scope', '$location', '$interval', '$mdDialog', 'ExperimentsFactory', 
-                                function ($scope, $location, $interval, $mdDialog, ExperimentsFactory) { 
+    .controller('ExperimentManagerCtrl', ['$scope', '$location', '$interval', '$mdDialog', 'ExperimentsFactory', 'ExperimentFactory',
+                                function ($scope, $location, $interval, $mdDialog, ExperimentsFactory, ExperimentFactory) { 
             $scope.loading = false;
             var expRefreshTimer;
             $scope.checkSession(function(){
@@ -26,8 +26,8 @@ angular.module('nimrod-portal.experiment-manager', [])
                 document.getElementById("resmanager").className="menu__link";
                 document.getElementById("filesmanagermgr").style.display="block";
                 document.getElementById("filesmanagermgr").className="menu__link";
-		listExperiments();
-                expRefreshTimer=$interval(listExperiments,20000);
+		        listExperiments();
+                expRefreshTimer=$interval(listExperiments,30000);
             });
 
             $scope.expGridOptions = {
@@ -42,11 +42,11 @@ angular.module('nimrod-portal.experiment-manager', [])
                 columnDefs: [
                   { field: 'name', displayName: 'Name', width: '16%', headerTooltip: 'Experiment Name' },
                   { field: 'state', displayName: 'State', width: '11%', headerTooltip: 'Experiment State'},
-                  { field: 'completed', displayName: 'Completed', width:'11%', headerTooltip: 'Number of completed jobs'},
-                  { field: 'failed', displayName: 'Failed', width:'10%', headerTooltip: 'Number of failed jobs'},
-                  { field: 'running', displayName: 'Running', width:'10%', headerTooltip: 'Number of pending jobs'},
-                  { field: 'pending', displayName: 'Pending', width:'10%', headerTooltip: 'Number of pending jobs'},
-                  { field: 'total', displayName: 'Total', width:'10%', headerTooltip: 'Number of total jobs'},
+                  { field: 'completed_jobs', displayName: 'Completed', width:'11%', headerTooltip: 'Number of completed jobs'},
+                  { field: 'failed_jobs', displayName: 'Failed', width:'10%', headerTooltip: 'Number of failed jobs'},
+                  { field: 'running_jobs', displayName: 'Running', width:'10%', headerTooltip: 'Number of pending jobs'},
+                  { field: 'pending_jobs', displayName: 'Pending', width:'10%', headerTooltip: 'Number of pending jobs'},
+                  { field: 'total_jobs', displayName: 'Total', width:'10%', headerTooltip: 'Number of total jobs'},
                   { field: 'creationtimeformatted', width: '22%', displayName: 'Created'}
                 ],
                 onRegisterApi: function( gridApi ) {
@@ -72,20 +72,22 @@ angular.module('nimrod-portal.experiment-manager', [])
                 ExperimentsFactory.getExperiments.query().$promise.then(
                     function(returnData) {
                         console.log(returnData);
-                        if(returnData.commandResult.length > 0){
+                        if(returnData.length > 0){
                             $scope.expGridOptions.data = [];
-                            returnData.commandResult.forEach(function (item){
-                                var options = { weekday: 'long', year: 'numeric', 
+                            returnData.forEach(function (item){
+                                var options = { weekday: 'short', year: 'numeric', 
                                                 month: 'short', day: 'numeric', hour: '2-digit', 
                                                 minute: '2-digit'};
-                                item.creationtimeformatted = new Date(parseInt(item.creationtime)*1000)
+                                // item.creationtimeformatted = new Date(parseInt(item.creation_time)*1000)
+                                //                                     .toLocaleDateString("en-US", options);
+                                item.creationtimeformatted = new Date(item.creation_time)
                                                                     .toLocaleDateString("en-US", options);
                                 // check job state
-                                var totalJobs = parseInt(item.total);
-                                var completeJobs = parseInt(item.completed);
-                                var failedJobs = parseInt(item.failed);
-                                var pendingJobs = parseInt(item.pending);
-                                var runningJobs = parseInt(item.running);
+                                var totalJobs = parseInt(item.total_jobs);
+                                var completeJobs = parseInt(item.completed_jobs);
+                                var failedJobs = parseInt(item.failed_jobs);
+                                var pendingJobs = parseInt(item.pending_jobs);
+                                var runningJobs = parseInt(item.running_jobs);
                                 if(totalJobs == completeJobs)
                                         item.state = 'COMPLETED';   
                                 $scope.expGridOptions.data.push(item);                                
@@ -95,9 +97,12 @@ angular.module('nimrod-portal.experiment-manager', [])
                     },
                     function (error) {
                         $scope.loading = false;
-                        console.log("Error @ listExperiments");
-                        console.log(error);
-                        $scope.broadcastMessage("Could not get experiment list");
+                        // console.log("Error @ listExperiments");
+                        // console.log(error);
+                        if(error.status==401)
+                            $scope.checkSession();
+                        else
+                            $scope.broadcastMessage("Could not get experiment list");
                     }
                 );
             }
@@ -117,7 +122,7 @@ angular.module('nimrod-portal.experiment-manager', [])
 
                 $mdDialog.show(confirm).then(function() {
                     $scope.loading = true;
-                    ExperimentsFactory.deleteExperiment.delete({'expname': $scope.selectedItem.name}).$promise.then(
+                    ExperimentFactory.delete ({'name': $scope.selectedItem.name}).$promise.then(
                         function() {
                             $scope.broadcastMessage("Experiment deleted");
                             listExperiments();

@@ -25,9 +25,9 @@
 						ng-model="experiment.planfile"
 						flex="80"></div>
 						<div layout="column" flex>
-							<md-list flex>
+							<md-list flex layout-align="space-between center" layout-padding>
 								<md-input-container class="md-block">
-									<label>Experiment Name</label>
+									<label>&nbsp;Experiment Name</label>
 									<input type="text" ng-disabled="!newExperiment || loading" name="expname_field" ng-model="experiment.expname" ng-pattern="/^[a-zA-Z0-9_]+$/" required flex/> 
 									<div ng-messages="expForm.expname_field.$error">
 										<div ng-message="pattern">
@@ -35,12 +35,12 @@
 										  </div>
 									</div>
 								</md-input-container>			
-								<md-divider></md-divider>
 								<md-list-item class="secondary-button-padding">
-			   						<md-button ng-disabled="experiment.validated || loading" ng-click="validatePln()">Validate</md-button>
+			   						<md-button class="md-primary" ng-disabled="loading" ng-click="validatePln()">Validate</md-button>
 			  					</md-list-item>
 			  					<md-list-item class="secondary-button-padding">
-			   						<md-button type="submit" class="md-raised md-primary" value="Create" ng-disabled="!newExperiment || !experiment.validated || loading">Create</md-button>	
+									   <md-button class="md-primary" type="submit" class="md-raised md-primary" value="Create" 
+									   ng-disabled="!newExperiment || !experiment.validated || loading">Create</md-button>	
 			  					</md-list-item>
 							</md-list>
 						</div>	
@@ -48,7 +48,7 @@
 				</form>
 			</md-content>
 		</md-tab>
-		<md-tab id="resources" label="Resources" ng-disabled="newExperiment || loading">
+		<md-tab id="resources" label="Resources" ng-disabled="newExperiment || loading" layout-align="space-between center">
 			<md-content class="md-padding">
 				<table border='0' layout-fill>
 		        <thead>
@@ -67,7 +67,8 @@
 		              style="font-size: 17px; cellpadding:20px; height: 20px;">
 		            <td>
 		              <br />
-		              <md-checkbox ng-checked="item.selected" aria-label="cb" ng-click="selectItem(item)" ng-disabled="loading">
+					  <md-checkbox ng-checked="item.selected" 
+					  			aria-label="cb" ng-click="selectItem(item)" ng-disabled="loading">
 			          </md-checkbox>	
 		              <!--input type="checkbox" ng-model="item.selected" ng-click="selectItem(item)" ng-disabled="loading"-->
 		              </input>
@@ -79,11 +80,13 @@
 		           	<td style="text-align: left">{{ item.walltime }}</td>
 		          </tr>
 		        </tbody>
-		      </table>
+			  </table>
+			  <md-button class="md-primary" class="md-raised md-primary" layout-align="space-between center" 
+			  				ng-disabled="loading"  ng-click="saveSelectResources()">Save</md-button>	
 			</md-content>
 		</md-tab>
-		<md-tab id="status" label="Control" ng-disabled="newExperiment || assignedResources.length==0 || loading">
-			<md-content md-direction="left" class="md-padding" layout-align="center">
+		<md-tab id="status" label="Control" layout-align="space-between center" ng-disabled="newExperiment || assignedResources.length==0 || loading || !assignmentSaved">
+			<md-content md-direction="left" class="md-padding" layout-align="space-between center">
 				<md-button class="md-raised md-primary" ng-disabled="loading || experiment.state=='RUNNING' || isMasterRunning" ng-click="startExperiment()">Start</md-button>
 			</md-content>
 		</md-tab>

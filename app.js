@@ -33,6 +33,8 @@ angular.module('nimrod-portal', [
             'accessToken': 'access_token?service=nimrod',
             'resourceApiBase': 'https://backend.nimrod-portal.cloud.edu.au/resource/api/',
             'serverApiBase': 'https://backend.nimrod-portal.cloud.edu.au/nimrod/api/',
+            // 'resourceApiBase': 'http://localhost/resource/api/',
+            // 'serverApiBase': 'http://localhost/nimrod/api/',
             'listFolderBase64': 'execute/listfolderbase64',
             'deleteBase64': 'execute/deletebase64',
             'copyBase64': 'execute/copybase64',
@@ -40,17 +42,13 @@ angular.module('nimrod-portal', [
             'listCopyingProcess': 'execute/listcopying',
             'getProjects': 'execute/getprojects',
             'accessibleLocations': 'execute/accessiblelocations',
-            'getExperiments': 'execute/getexperiments',
-            'addExperiment': 'execute/addexperiment',
-            'compilePlanfile': 'execute/compileplanfile',
-            'readPlanFile': 'execute/readtextfile',
-            'deleteExperiment': 'execute/deleteexperiment', 
-            'getResources': 'execute/getresources',
-            'addResource': 'execute/addrcchpcresource',
-            'deleteResource': 'execute/deleteresource',
-            'assignResource': 'execute/assignresource',
-            'unassignResource': 'execute/unassignresource',
-            'getAssignments': 'execute/getassignments',
+            // experiments
+            'experiments': 'experiments',
+            'compilePlanfile': 'compile',
+            
+            // resources
+            'resources': 'resources',
+            
             'startExperiment': 'execute/startexperiment',
             'checkProcess': 'execute/checkprocess'    
         },
@@ -149,7 +147,7 @@ angular.module('nimrod-portal', [
         $scope.sessionRefreshTimer = $interval(function(){
                                                 console.log("....Checking session....");
                                                 $scope.checkSession();
-                                            },60000);// every 1 minutes
+                                            },120000);// every 2 minutes
         $scope.checkSession = function(onValidAccessTokenCallback){
             SessionFactory.sessionInfo.get({}, function(data) {
                 if (data.has_oauth_access_token !== "true") {

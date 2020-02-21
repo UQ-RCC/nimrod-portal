@@ -5,8 +5,8 @@
 		<div flex layout="row">
 			<md-input-container class="md-block" flex="45%">
 				<label>Resource Name</label>
-				<input type="text" ng-disabled="!newRes" name="resname" ng-model="resource.resname" ng-pattern="/^[a-zA-Z0-9_]+$/" required/> 
-				<div ng-messages="resourceForm.resname.$error">
+				<input type="text" ng-disabled="!newRes" name="name" ng-model="resource.name" ng-pattern="/^[a-zA-Z0-9_]+$/" required/> 
+				<div ng-messages="resourceForm.name.$error">
 					<div ng-message="pattern">
 	            		Invalid experiment name. /^[a-zA-Z0-9_]+$/.
 	          		</div>

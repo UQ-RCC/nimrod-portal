@@ -116,7 +116,10 @@ angular.module('nimrod-portal.files-manager', [])
                     console.log("Error: failed to load:" + newPath);
                     $scope.filesmanagerOptions.loading = false;
                     $scope.filesmanagerOptions.currentpath = oldPath;
-                    $scope.broadcastMessage("Error loading:" + newPath + ". You probably do not have permission");
+                    if(error.status==401)
+                        $scope.checkSession();
+                    else
+                        $scope.broadcastMessage("Error loading:" + newPath + ". You probably do not have permission");
                 }                 
             };
 
