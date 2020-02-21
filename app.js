@@ -100,9 +100,9 @@ angular.module('nimrod-portal', [
         };
         // Called any time the login popup closes
         var onLoginWindowClose = function() {
-            SessionFactory.sessionInfo.get({}, function(data) {
-                if (data.has_oauth_access_token === "true") {
-                    $scope.checkSession();
+            SessionFactory.accessToken.get({}, function(data) {
+                if (data && data.access_token) {
+                    TokenHandler.set(data.access_token);
                     UserFactory.provision.put({username: data.uname});
                     document.getElementById("home-btn").style.display="none";
                     document.getElementById("login").style.display="none";
