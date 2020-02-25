@@ -48,7 +48,7 @@ angular.module('nimrod-portal', [
             
             // resources
             'resources': 'resources',
-            
+            // start experiment
             'startExperiment': 'execute/startexperiment',
             'checkProcess': 'execute/checkprocess'    
         },
@@ -103,11 +103,16 @@ angular.module('nimrod-portal', [
             SessionFactory.accessToken.get({}, function(data) {
                 if (data && data.access_token) {
                     TokenHandler.set(data.access_token);
-                    UserFactory.provision.put({username: data.uname});
+                    UserFactory.provision.put({username: data.uname}).$promise.then(function () {
+                            $location.path("/experiment-manager");
+                        },
+                        function (error) {
+                            $scope.showAlertDialog("We are experiencing problems creating your account. Please come back in a few minutes.");
+                            $location.path("/landingpage");
+                        });
                     document.getElementById("home-btn").style.display="none";
                     document.getElementById("login").style.display="none";
                     document.getElementById("logout-btn").style.display="block";
-                    $location.path("/experiment-manager");
                     document.getElementById("expmanager").style.display="block";
                     document.getElementById("resmanager").style.display="block";
                     document.getElementById("filesmanagermgr").style.display="block";

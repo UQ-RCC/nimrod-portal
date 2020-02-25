@@ -122,6 +122,7 @@ angular.module('nimrod-portal.resource', [])
                 $scope.resource.limit = $scope.resource.nbatch * $scope.resource.maxbatch;
                 ResourcesFactory.create($scope.resource).$promise.then(
                     function() {
+                        $scope.loading = false;
                         $location.path("/resource-manager");
                     },
                     function (error) {

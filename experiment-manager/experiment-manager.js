@@ -124,6 +124,7 @@ angular.module('nimrod-portal.experiment-manager', [])
                     $scope.loading = true;
                     ExperimentFactory.delete ({'name': $scope.selectedItem.name}).$promise.then(
                         function() {
+                            $scope.loading = false;
                             $scope.broadcastMessage("Experiment deleted");
                             listExperiments();
                         },

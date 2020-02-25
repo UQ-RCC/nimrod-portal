@@ -9,9 +9,9 @@ angular.module('nimrod-portal.experiment', [])
         });
     }])
 
-    .controller('ExperimentCtrl', ['$scope', '$location', 
+    .controller('ExperimentCtrl', ['$scope', '$location', 'GetProjectsFactory',
             'ExperimentsFactory', 'ExperimentFactory', 'ResourcesFactory', 'MiscFactory', 'AssignmentFactory',
-        function ($scope, $location, 
+        function ($scope, $location, GetProjectsFactory,
             ExperimentsFactory, ExperimentFactory, ResourcesFactory, MiscFactory, AssignmentFactory) {
             // call checkSession for the first ime
             $scope.checkSession(function(){
@@ -25,12 +25,25 @@ angular.module('nimrod-portal.experiment', [])
                 document.getElementById("resmanager").className="menu__link";
                 document.getElementById("filesmanagermgr").style.display="block";
                 document.getElementById("filesmanagermgr").className="menu__link";
+                // get expriment
                 getOrCreateExperiment($location.search().experimentname);
+                // list resources
                 if($location.search().experimentname)
                     listResourcesAndAssignedResources(false);
                 else
-                    listResourcesAndAssignedResources(true);    
+                    listResourcesAndAssignedResources(true);
+                // is the master running    
                 checkMasterProcessRunning();
+                // get the projects
+                GetProjectsFactory.query().$promise.then(
+                    function(returnData){
+                        $scope.accounts = returnData.commandResult;
+                    },
+                    function (error) {
+                        console.log("Error:" + error);
+                    }
+                );
+
             });
 
             // experiment
@@ -39,6 +52,8 @@ angular.module('nimrod-portal.experiment', [])
             $scope.experiment.validated = false;
             //list of nimrod resources
             $scope.resources = [];
+            // accounts this user belong to
+            $scope.accounts = [];
             // list of assigned resources
             $scope.assignedResources = [];
             // an extra loadign variable
@@ -144,7 +159,7 @@ angular.module('nimrod-portal.experiment', [])
             /********************************************/
             $scope.saveSelectResources = function(){
                 var queryParam = $scope.assignedResources;
-                queryParam.name = $location.search().experimentname;
+                queryParam.name = $location.search().experimentname || $scope.experiment.expname;
                 AssignmentFactory.assign(queryParam).$promise.then(
                     function(returnData) {
                         var _msg = "Resource assignment saved! ";
@@ -245,7 +260,10 @@ angular.module('nimrod-portal.experiment', [])
             /*******************************************/
             $scope.startExperiment = function(){
                 $scope.loading = true;
-                ExperimentsFactory.startExperiment.start({"experiment": $scope.experiment.expname}).$promise.then(
+                ExperimentsFactory.startExperiment.start(
+                        {"exp_name": $scope.experiment.expname, 
+                        "account": $scope.accounts[0].group}
+                    ).$promise.then(
                     function(returnData) {
                         $location.path("/experiment-manager");
                     },
@@ -303,13 +321,11 @@ endtask \n'};
             var checkMasterProcessRunning = function(){
                 ExperimentsFactory.checkProcess.check().$promise.then(
                         function(returnData) {
-                            var cmdResult = returnData;
-                            if(cmdResult.hasOwnProperty('alive')){
-                                var alive = parseInt(cmdResult.alive);
-                                $scope.isMasterRunning = (alive===1);
-                            }
+                            var cmdResult = returnData.commandResult[0];
+                            if(cmdResult && cmdResult['status'] != 'F')
+                                $scope.isMasterRunning = true;
                             else
-                                $scope.isMasterRunning = false;    
+                                $scope.isMasterRunning = false;  
                         },
                         function (error) {
                             // is this safe ?

@@ -36,7 +36,7 @@
 									</div>
 								</md-input-container>			
 								<md-list-item class="secondary-button-padding">
-			   						<md-button class="md-primary" ng-disabled="loading" ng-click="validatePln()">Validate</md-button>
+			   						<md-button class="md-primary" ng-disabled="loading || !newExperiment" ng-click="validatePln()">Validate</md-button>
 			  					</md-list-item>
 			  					<md-list-item class="secondary-button-padding">
 									   <md-button class="md-primary" type="submit" class="md-raised md-primary" value="Create" 
@@ -50,7 +50,7 @@
 		</md-tab>
 		<md-tab id="resources" label="Resources" ng-disabled="newExperiment || loading" layout-align="space-between center">
 			<md-content class="md-padding">
-				<table border='0' layout-fill>
+				<table border='0' layout-fill ng-disabled="loading || experiment.state=='RUNNING'">
 		        <thead>
 		          <tr>
 		          	<th>
@@ -87,7 +87,9 @@
 		</md-tab>
 		<md-tab id="status" label="Control" layout-align="space-between center" ng-disabled="newExperiment || assignedResources.length==0 || loading || !assignmentSaved">
 			<md-content md-direction="left" class="md-padding" layout-align="space-between center">
-				<md-button class="md-raised md-primary" ng-disabled="loading || experiment.state=='RUNNING' || isMasterRunning" ng-click="startExperiment()">Start</md-button>
+				<md-button class="md-raised md-primary" 
+						ng-disabled="loading || experiment.state=='RUNNING' || isMasterRunning || $scope.accounts.length == 0" 
+						ng-click="startExperiment()">Start</md-button>
 			</md-content>
 		</md-tab>
 		
