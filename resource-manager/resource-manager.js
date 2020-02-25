@@ -38,6 +38,7 @@ angular.module('nimrod-portal.resource-manager', [])
                 multiSelect: false,
                 noUnselect: true,
                 showGridFooter: false,
+                rowTemplate: rowTemplate(),
                 data: [],
                 columnDefs: [
                   { field: 'name', displayName: 'Name', width: '20%', headerTooltip: 'Resource Name' },
@@ -58,6 +59,18 @@ angular.module('nimrod-portal.resource-manager', [])
                     });
                 }
             };
+
+            function rowTemplate() {
+                return  '<div ng-dblclick="grid.appScope.rowDblClick(row)" >' +
+                        '<div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }"  ui-grid-cell></div>' +
+                        '</div>';
+            }
+
+            $scope.rowDblClick = function(row) {
+                $location.path("/resource").search({resourcename: row.entity.name});
+            };
+
+
 
             /**
             * List all the resources

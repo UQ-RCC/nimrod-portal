@@ -32,6 +32,7 @@ angular.module('nimrod-portal.experiment-manager', [])
 
             $scope.expGridOptions = {
                 enableSorting: true,
+                rowTemplate: rowTemplate(),
                 enableRowSelection: true,
                 enableRowHeaderSelection: false,
                 enableSelectAll: false,
@@ -60,14 +61,27 @@ angular.module('nimrod-portal.experiment-manager', [])
                 }
             };
 
+            function rowTemplate() {
+                return  '<div ng-dblclick="grid.appScope.rowDblClick(row)" >' +
+                        '<div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name"'+ 
+                        'class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" ui-grid-cell></div>'+
+                        '</div>';
+            }
+
+            $scope.rowDblClick = function(row) {
+                $location.path("/experiment").search({experimentname: row.entity.name});
+            };
+
+
+
             /**
             * List all the eperiments
             */
             var listExperiments = function(){
-		// if there is a request, return
+		        // if there is a request, return
                 if($scope.loading){
                     return;
-		}
+		        }
                 $scope.loading = true;
                 ExperimentsFactory.getExperiments.query().$promise.then(
                     function(returnData) {
