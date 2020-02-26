@@ -17,7 +17,9 @@ angular.module('nimrod-portal', [
     'nimrod-portal.resource-manager',
     'nimrod-portal.experiment',
     'nimrod-portal.resource',
-    'ui.ace' 
+    'ui.ace',
+    'ui.bootstrap', 
+    'ui.bootstrap.contextMenu' 
 ]).
     config(['$routeProvider', '$httpProvider',
         function ($routeProvider, $httpProvider) {

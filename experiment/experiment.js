@@ -291,8 +291,6 @@ angular.module('nimrod-portal.experiment', [])
 parameter airspeed integer range from 50 to 600 step 50 \n\
 // parameter with float range and label \n\
 parameter AoA label "Angle of attack" float range from -45 to 45 step 2.5 \n\
-// parameer with files \n\
-parameter aircraft_model files select anyof "A3??.dat" "737-*.dat" \n\
 // parametre with select \n\
 parameter winglets text select anyof "none" "fence" "blended" "raked" \n\
 // parameter with random \n\
@@ -300,12 +298,11 @@ parameter turbulence label "Normalized Reynolds" float random from 1 to 2 \n\
 // main task \n\
 task main \n\
     // copy files from root to compute node \n\
-    copy root:${aircraft_model} node:. \n\
     copy root:wing_test.zip node:. \n\
     // exec a command	\n\
     exec unzip wing_test.zip \n\
     // shell exec: execute a command line on the system\'s default shell \n\
-    shexec "./run_wing_test.sh ${aircraft_model} ${winglets} ${AoA} ${airspeed} ${turbulence} >> output.${jobindex}" \n\
+    shexec "./run_wing_test.sh ${winglets} ${AoA} ${airspeed} ${turbulence} >> output.${jobindex}" \n\
     shexec "zip results.${jobindex} *" \n\
     // copy files from node back to root \n\
     copy node:results.${jobindex}.zip root:. \n\

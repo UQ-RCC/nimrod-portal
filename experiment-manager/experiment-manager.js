@@ -62,16 +62,18 @@ angular.module('nimrod-portal.experiment-manager', [])
             };
 
             function rowTemplate() {
-                return  '<div ng-dblclick="grid.appScope.rowDblClick(row)" >' +
-                        '<div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name"'+ 
-                        'class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" ui-grid-cell></div>'+
-                        '</div>';
+                // from here http://plnkr.co/edit/VJE4G458aOavZAedsjFW?p=preview
+                return '<div ng-dblclick="grid.appScope.rowDblClick(row)"' +
+                        'ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name"'+
+                        'class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }"' +
+                        //'ui-grid-cell context-menu="grid.appScope.contextmenuOptions(row)"' + 
+                        ' ui-grid-cell ' + 
+                        'data-target="myMenu" ></div>'
             }
 
             $scope.rowDblClick = function(row) {
                 $location.path("/experiment").search({experimentname: row.entity.name});
             };
-
 
 
             /**

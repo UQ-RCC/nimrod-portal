@@ -61,15 +61,18 @@ angular.module('nimrod-portal.resource-manager', [])
             };
 
             function rowTemplate() {
-                return  '<div ng-dblclick="grid.appScope.rowDblClick(row)" >' +
-                        '<div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }"  ui-grid-cell></div>' +
-                        '</div>';
+                // http://plnkr.co/edit/VJE4G458aOavZAedsjFW?p=preview
+                return '<div ng-dblclick="grid.appScope.rowDblClick(row)"' +
+                'ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name"'+
+                'class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }"' +
+                //'ui-grid-cell context-menu="grid.appScope.contextmenuOptions(row)"' + 
+                ' ui-grid-cell ' + 
+                'data-target="myMenu" ></div>'
             }
 
             $scope.rowDblClick = function(row) {
                 $location.path("/resource").search({resourcename: row.entity.name});
             };
-
 
 
             /**
@@ -132,6 +135,7 @@ angular.module('nimrod-portal.resource-manager', [])
                     $scope.loading = true;
                     ResourceFactory.delete({'name': $scope.selectedItem.name}).$promise.then(
                         function() {
+                            $scope.loading = false;
                             $scope.broadcastMessage("Resource deleted");
                             listResources();
                         },
