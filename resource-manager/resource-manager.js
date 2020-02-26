@@ -125,7 +125,7 @@ angular.module('nimrod-portal.resource-manager', [])
                 // Appending dialog to document.body to cover sidenav in docs app
                 var confirm = $mdDialog.confirm()
                       .title('Are you sure to delete this resource?')
-                      .textContent('Resource to be deleted: ' + $scope.selectedItem.name + ' of type:' + $scope.selectedItem.type)
+                      .textContent('Resource to be deleted: ' + $scope.selectedItem.name)
                       .ariaLabel('delete')
                       .targetEvent(ev)
                       .ok('Yes')
