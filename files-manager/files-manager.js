@@ -109,7 +109,7 @@ angular.module('nimrod-portal.files-manager', [])
                         lastPaths['files-manager'] = $scope.filesmanagerOptions.currentpath;
                         // save to currentpath
                         userPref['lastPaths'] = lastPaths;
-                        UserPreferenceFactory.update({}, JSON.stringify(userPref));
+                        UserPreferenceFactory.update({}, angular.toJson(userPref));
                     }
                 ),
                 function (error) {
@@ -207,7 +207,7 @@ angular.module('nimrod-portal.files-manager', [])
                 $scope.filesmanagerOptions.shortcuts.push({'label': shortcutName, 'path': shortcutPath});
                 // save it to preference
                 userPref['bookmarks'] = $scope.filesmanagerOptions.shortcuts;
-                UserPreferenceFactory.update({}, JSON.stringify(userPref));
+                UserPreferenceFactory.update({}, angular.toJson(userPref));
             };
 
             $scope.removeShortcut = function(shortcut){
@@ -219,7 +219,7 @@ angular.module('nimrod-portal.files-manager', [])
                     }
                 }
                 userPref['bookmarks'] = $scope.filesmanagerOptions.shortcuts;
-                UserPreferenceFactory.update({}, JSON.stringify(userPref));
+                UserPreferenceFactory.update({}, angular.toJson(userPref));
             }
 
             $scope.visitShortcut = function(shortcutPath){

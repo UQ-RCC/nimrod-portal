@@ -72,7 +72,7 @@ angular
                                   = $ctrl.modalContents.currentpath;
               // save to currentpath
               userPref['lastPaths'] = lastPaths;
-              UserPreferenceFactory.update({}, JSON.stringify(userPref));
+              UserPreferenceFactory.update({}, angular.toJson(userPref));
 	        }
 	    ),
 	    function (error) {
@@ -189,7 +189,7 @@ angular
       	$ctrl.modalContents.shortcuts.push({'label': shortcutName, 'path': shortcutPath});
       	// save it to preference
         userPref['bookmarks'] = bookmarks;
-      	UserPreferenceFactory.update({}, JSON.stringify(userPref));
+      	UserPreferenceFactory.update({}, angular.toJson(userPref));
       };
 
       $ctrl.removeShortcut = function(shortcut){
@@ -201,7 +201,7 @@ angular
 		    }
         }
         userPref['bookmarks'] = bookmarks;
-        UserPreferenceFactory.update({}, JSON.stringify(userPref));
+        UserPreferenceFactory.update({}, angular.toJson(userPref));
       }
 
       $ctrl.isLoading = function () {
