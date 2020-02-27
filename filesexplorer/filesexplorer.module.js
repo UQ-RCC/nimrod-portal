@@ -25,6 +25,8 @@ angular
       $ctrl.selected = {};
       $ctrl.bookmarkEdit = false;
 
+      var userPref = {};
+
       /**
       * list dir
       */
@@ -69,9 +71,8 @@ angular
               lastPaths[$ctrl.modalContents.source][$ctrl.modalContents.mode] 
                                   = $ctrl.modalContents.currentpath;
               // save to currentpath
-              UserPreferenceFactory.update({}, 
-                    JSON.stringify({'lastPaths':  angular.toJson( lastPaths )})
-              );
+              userPref['lastPaths'] = lastPaths;
+              UserPreferenceFactory.update({}, JSON.stringify(userPref));
 	        }
 	    ),
 	    function (error) {
@@ -140,7 +141,7 @@ angular
             function (data) {
             	// bookmarks
             	if(data.hasOwnProperty("bookmarks"))
-        			$ctrl.modalContents.shortcuts = JSON.parse(data["bookmarks"]);
+        			$ctrl.modalContents.shortcuts = data["bookmarks"];
         		else
         		    $ctrl.modalContents.shortcuts = []; 
         		// home   
@@ -157,7 +158,7 @@ angular
 		        }
 		        // last path
             if(data.hasOwnProperty("lastPaths"))
-                lastPaths = JSON.parse(data['lastPaths']);
+                lastPaths = data['lastPaths'];
             else    
                 lastPaths = {};                        
             if(!lastPaths.hasOwnProperty($ctrl.modalContents.source))
@@ -187,8 +188,8 @@ angular
       	// add it to the existing paths
       	$ctrl.modalContents.shortcuts.push({'label': shortcutName, 'path': shortcutPath});
       	// save it to preference
-      	var bookmarks = {'bookmarks':  angular.toJson( $ctrl.modalContents.shortcuts )};
-      	UserPreferenceFactory.update({}, JSON.stringify(bookmarks));
+        userPref['bookmarks'] = bookmarks;
+      	UserPreferenceFactory.update({}, JSON.stringify(userPref));
       };
 
       $ctrl.removeShortcut = function(shortcut){
@@ -198,9 +199,9 @@ angular
 		       $ctrl.modalContents.shortcuts.splice(i, 1);
 		       break;
 		    }
-		}
-      	var bookmarks = {'bookmarks':  angular.toJson( $ctrl.modalContents.shortcuts )};
-      	UserPreferenceFactory.update({}, JSON.stringify(bookmarks));
+        }
+        userPref['bookmarks'] = bookmarks;
+        UserPreferenceFactory.update({}, JSON.stringify(userPref));
       }
 
       $ctrl.isLoading = function () {
