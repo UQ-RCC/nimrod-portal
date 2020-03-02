@@ -25,13 +25,13 @@ angular.module('nimrod-portal.experiment', [])
                 document.getElementById("resmanager").className="menu__link";
                 document.getElementById("filesmanagermgr").style.display="block";
                 document.getElementById("filesmanagermgr").className="menu__link";
-                // get expriment
+                // get expriment $location.search().duplicate
+                //
                 getOrCreateExperiment($location.search().experimentname);
+                isDuplicate = ($location.search().duplicate == 'true');
+                $scope.newExperiment = !$location.search().experimentname || isDuplicate;
                 // list resources
-                if($location.search().experimentname)
-                    listResourcesAndAssignedResources(false);
-                else
-                    listResourcesAndAssignedResources(true);
+                listResourcesAndAssignedResources($scope.newExperiment, $location.search().experimentname);
                 // is the master running    
                 checkMasterProcessRunning();
                 // get the projects
@@ -62,6 +62,8 @@ angular.module('nimrod-portal.experiment', [])
             $scope.isMasterRunning = true;
             // is assignmen saved
             $scope.assignmentSaved = true;
+            // duplicate 
+            var isDuplicate = false;
             /**
             * List all the eperiments
             */
@@ -73,11 +75,18 @@ angular.module('nimrod-portal.experiment', [])
                         function(exp) {
                             if(exp.name === experimentname){
                                 found = true;
-                                $scope.newExperiment = false;
-                                $scope.experiment = exp;
-                                $scope.experiment.expname = exp.name;
+                                $scope.experiment = exp;                               
                                 $scope.experiment.validated = true;
                                 $scope.experiment.planfile = exp.planfile;
+                                if(isDuplicate){
+                                    $scope.newExperiment = true;
+                                    $scope.experiment.expname = exp.name  + "_copy";
+                                }
+                                else{
+                                    $scope.newExperiment = false;
+                                    $scope.experiment.expname = exp.name;
+                                }
+
                                 // list resources
                                 if(!$scope.resourceLoading)
                                     $scope.loading = false;
@@ -193,7 +202,7 @@ angular.module('nimrod-portal.experiment', [])
             /**
             * List all the resources and assigned ones
             */
-            var listResourcesAndAssignedResources = function(newlyCreated){
+            var listResourcesAndAssignedResources = function(newlyCreated, expName){
                 if(!newlyCreated){
                     $scope.loading = true;
                 }
@@ -218,8 +227,8 @@ angular.module('nimrod-portal.experiment', [])
                                 $scope.resources.push(resource);
                             }
                             // only list assigned one for the old experiments
-                            if(!newlyCreated && $location.search().experimentname.trim()!==''){
-                                AssignmentFactory.show({"name": $location.search().experimentname}).$promise.then(
+                            if(!newlyCreated && expName.trim()!==''){
+                                AssignmentFactory.show({"name": expName}).$promise.then(
                                     function(returnData) {
                                         $scope.assignedResources = [];
                                         returnData.forEach(function(resname){

@@ -22,6 +22,8 @@ angular.module('nimrod-portal.resource', [])
             $scope.newRes = false;
             // loading
             $scope.loading = false;
+            // duplicate 
+            var isDuplicate = false;
             // call checkSession for the first ime
             $scope.checkSession(function(){
                 document.getElementById("home-btn").style.display="none";
@@ -47,6 +49,7 @@ angular.module('nimrod-portal.resource', [])
                         $scope.broadcastMessage("Could not load account strings!");
                     }
                 );
+                isDuplicate = ($location.search().duplicate == 'true');
                 getOrCreateResource($location.search().resourcename);
 
             });
@@ -76,7 +79,13 @@ angular.module('nimrod-portal.resource', [])
                                 };
                                 $scope.resource.nbatch = Math.ceil($scope.resource.limit/$scope.resource.maxbatch);
                             }
-                            $scope.newRes = false;
+                            if(isDuplicate){
+                                $scope.newRes = true;
+                                $scope.resource['name'] = resourcename + "_copy";
+                            }
+                            else{
+                                $scope.newRes = false;
+                            }
                             $scope.loading = false;
                         },
                         function (error) {

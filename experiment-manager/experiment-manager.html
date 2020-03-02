@@ -9,7 +9,10 @@
       <md-button class="md-raised md-primary" ng-href="#!/experiment">
         Add
       </md-button>
-      <md-button class="md-raised md-primary" ng-href="#!/experiment?experimentname={{ selectedItem.name }}" 
+      <md-button class="md-raised md-primary" ng-href="#!/experiment?experimentname={{ selectedItem.name }}&duplicate=true" 
+            ng-disabled="!selectedItem" >Duplicate
+      </md-button>
+		  <md-button class="md-raised md-primary" ng-href="#!/experiment?experimentname={{ selectedItem.name }}" 
             ng-disabled="!selectedItem" >View
       </md-button>
 		  <md-button class="md-raised md-warn" ng-click="deleteSelectedExp($event)" ng-disabled="!selectedItem">

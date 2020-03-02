@@ -8,7 +8,8 @@
 
     <div layout="row" layout-align="center center">
     	<md-button class="md-raised md-primary" ng-href="#!/resource">Add</md-button>
-		<md-button class="md-raised md-primary" ng-href="#!/resource?resourcename={{ selectedItem.name }}" ng-disabled="!selectedItem">View</md-button>
+      <md-button class="md-raised md-primary" ng-href="#!/resource?resourcename={{ selectedItem.name }}&duplicate=true" ng-disabled="!selectedItem">Duplicate</md-button>
+    	<md-button class="md-raised md-primary" ng-href="#!/resource?resourcename={{ selectedItem.name }}" ng-disabled="!selectedItem">View</md-button>
     	<md-button class="md-raised md-warn" ng-click="deleteSelectedRes($event)" ng-disabled="!selectedItem">Delete</md-button>
     </div>
 
