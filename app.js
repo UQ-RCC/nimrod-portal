@@ -52,6 +52,7 @@ angular.module('nimrod-portal', [
             'resources': 'resources',
             // start experiment
             'startExperiment': 'execute/startexperiment',
+            'stopExperiment': 'execute/stopexperiment',
             'checkProcess': 'execute/checkprocess'    
         },
         'maxRetryOnServerError': 1

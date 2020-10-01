@@ -90,6 +90,9 @@
 				<md-button class="md-raised md-primary" 
 						ng-disabled="loading || experiment.state=='RUNNING' || isMasterRunning || $scope.accounts.length == 0" 
 						ng-click="startExperiment()">Start</md-button>
+				<md-button class="md-raised md-primary"
+                                                ng-disabled="loading || experiment.state!=='STARTED' || !isMasterRunning || $scope.accounts.length == 0"
+                                                ng-click="stopExperiment()">Stop</md-button>
 			</md-content>
 		</md-tab>
 		

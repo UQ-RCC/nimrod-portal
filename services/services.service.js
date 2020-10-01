@@ -133,6 +133,10 @@ angular.module('nimrod-portal.services')
     resources.startExperiment = $resource(settings.URLs.resourceApiBase + settings.URLs.startExperiment, {}, {
       start: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
+    // stop experiment
+    resources.stopExperiment = $resource(settings.URLs.resourceApiBase + settings.URLs.stopExperiment, {}, {
+      stop: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
+    });
 
     //validate plan file
     resources.validatePlanFile = $resource(settings.URLs.serverApiBase + settings.URLs.compilePlanfile, {}, {

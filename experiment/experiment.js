@@ -29,6 +29,7 @@ angular.module('nimrod-portal.experiment', [])
                 //
                 getOrCreateExperiment($location.search().experimentname);
                 isDuplicate = ($location.search().duplicate == 'true');
+		$scope.experiment.state = $location.search().state;
                 $scope.newExperiment = !$location.search().experimentname || isDuplicate;
                 // list resources
                 listResourcesAndAssignedResources($scope.newExperiment, $location.search().experimentname);
@@ -107,7 +108,6 @@ angular.module('nimrod-portal.experiment', [])
                     $scope.experiment.validated = false;
                 }
 
-                   
             }
             
             /************************************************************/
@@ -281,6 +281,21 @@ angular.module('nimrod-portal.experiment', [])
                         console.log("Error starting experiment");
                         console.log(error);
                         $scope.showAlertDialog("Could not start experiment:" + $scope.experiment.expname);
+                    }
+                );
+            }
+
+	    $scope.stopExperiment = function(){
+                $scope.loading = true;
+                ExperimentsFactory.stopExperiment.stop().$promise.then(
+                    function(returnData) {
+                        $location.path("/experiment-manager");
+                    },
+                    function (error) {
+                        $scope.loading = false;
+                        console.log("Error stopping experiment");
+                        console.log(error);
+                        $scope.showAlertDialog("Could not stop experiment:" + $scope.experiment.expname);
                     }
                 );
             }

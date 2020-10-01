@@ -12,10 +12,10 @@
       <md-button class="md-raised md-primary" ng-href="#!/experiment?experimentname={{ selectedItem.name }}&duplicate=true" 
             ng-disabled="!selectedItem" >Duplicate
       </md-button>
-		  <md-button class="md-raised md-primary" ng-href="#!/experiment?experimentname={{ selectedItem.name }}" 
+	      <md-button class="md-raised md-primary" ng-href="#!/experiment?experimentname={{ selectedItem.name }}&state={{ selectedItem.state }}" 
             ng-disabled="!selectedItem" >View
       </md-button>
-		  <md-button class="md-raised md-warn" ng-click="deleteSelectedExp($event)" ng-disabled="!selectedItem">
+		  <md-button class="md-raised md-warn" ng-click="deleteSelectedExp($event)" ng-disabled="!selectedItem || selectedItem.state ==='STARTED' || selectedItem.state ==='RUNNING'">
         Delete
       </md-button>
     </div>
