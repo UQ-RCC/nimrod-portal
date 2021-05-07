@@ -16,7 +16,7 @@ angular.module('nimrod-portal.experiment', [])
             // call checkSession for the first ime
             $scope.checkSession(function(){
                 document.getElementById("home-btn").style.display="none";
-                document.getElementById("contact-btn").className="menu__link";
+                document.getElementById("support-btn").className="menu__link";
                 document.getElementById("login").style.display="none";
                 document.getElementById("logout-btn").style.display="block";
                 document.getElementById("expmanager").style.display="block";

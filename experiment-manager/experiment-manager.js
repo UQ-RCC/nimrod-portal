@@ -17,7 +17,7 @@ angular.module('nimrod-portal.experiment-manager', [])
             $scope.checkSession(function(){
                 console.log("Checking session at experiment manager");
                 document.getElementById("home-btn").style.display="none";
-                document.getElementById("contact-btn").className="menu__link";
+                document.getElementById("support-btn").className="menu__link";
                 document.getElementById("login").style.display="none";
                 document.getElementById("logout-btn").style.display="block";
                 document.getElementById("expmanager").style.display="block";
