@@ -27,16 +27,16 @@ angular.module('nimrod-portal', [
         }])
     .constant('settings', {
         'URLs': {
-            'base': '/client/',
-            'apiBase': '/client/api/',
+            'base': window.__env.base,
+            'apiBase': window.__env.apiBase,
             'oauthStart': 'login',
             'logout': 'end_session',
             'sessionInfo': 'session_info?service=nimrod',
             'accessToken': 'access_token?service=nimrod',
             'resourceApiBase': 'https://backend.nimrod-portal.cloud.edu.au/resource/api/',
             'serverApiBase': 'https://backend.nimrod-portal.cloud.edu.au/nimrod/api/',
-            // 'resourceApiBase': 'http://localhost/resource/api/',
-            // 'serverApiBase': 'http://localhost/nimrod/api/',
+            'resourceApiBase': window.__env.resourceApiBase,
+            'serverApiBase': window.__env.serverApiBase,
             'listFolderBase64': 'execute/listfolderbase64',
             'deleteBase64': 'execute/deletebase64',
             'copyBase64': 'execute/copybase64',
