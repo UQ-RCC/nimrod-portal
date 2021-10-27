@@ -13,6 +13,7 @@ RUN mkdir /tmp/fastcgi_temp && chmod -R g+w /tmp/fastcgi_temp
 RUN mkdir /tmp/proxy_temp && chmod -R g+w /tmp/proxy_temp
 RUN mkdir /tmp/scgi_temp && chmod -R g+w /tmp/scgi_temp
 RUN mkdir /tmp/uwsgi_temp && chmod -R g+w /tmp/uwsgi_temp
+RUN touch /tmp/nginx.pid && chmod -R g+w /tmp/nginx.pid
 EXPOSE 8080
 
 CMD ["nginx", "-g", "daemon off;"]
