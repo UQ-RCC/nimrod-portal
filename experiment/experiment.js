@@ -343,7 +343,7 @@ endtask \n'};
                 ExperimentsFactory.checkProcess.check().$promise.then(
                         function(returnData) {
                             var cmdResult = returnData.commandResult[0];
-                            if(cmdResult && cmdResult['status'] != 'F')
+                            if(cmdResult && cmdResult['status'] != 'F' && cmdResult['status'] != 'E')
                                 $scope.isMasterRunning = true;
                             else
                                 $scope.isMasterRunning = false;  
