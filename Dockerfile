@@ -6,10 +6,8 @@ RUN apk update
 RUN apk add --no-cache npm
 RUN npm install
 
-FROM nginx:1.21.3
+FROM nginxinc/nginx-unprivileged:1.20
 COPY --from=builder /app/ /usr/share/nginx/html/
-COPY --from=builder /app/nginx.conf /etc/nginx/conf.d/default.conf
-RUN chmod g+rwx /var/cache/nginx /var/run /var/log/nginx
-EXPOSE 80
+EXPOSE 8080
 
-CMD nginx -g "daemon off;"
+CMD ["nginx", "-g", "daemon off;"]
