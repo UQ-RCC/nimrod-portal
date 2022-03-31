@@ -175,7 +175,7 @@ angular.module('nimrod-portal.services')
     });
   }])
   .factory('SshResourceFactory', ['$resource', 'TokenHandler', 'settings', function ($resource, tokenHandler, settings) {
-    return $resource(settings.URLs.resourceApiBase + settings.URLs.checkProcess , {}, {
+    return $resource(settings.URLs.resourceApiBase + settings.URLs.addResource , {}, {
       create: tokenHandler.wrapConfig({ method: 'GET', isArray: false })
     });
   }])
