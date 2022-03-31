@@ -44,6 +44,7 @@ angular.module('nimrod-portal', [
             'listCopyingProcess': 'execute/listcopying',
             'getProjects': 'execute/getprojects',
             'accessibleLocations': 'execute/accessiblelocations',
+            'addResource': 'execute/addresource',
             // experiments
             'experiments': 'experiments',
             'compilePlanfile': 'compile',

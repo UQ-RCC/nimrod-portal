@@ -29,7 +29,7 @@ angular.module('nimrod-portal.services')
 
     methods.availableMachines = function () {
       return [
-        { 'label': 'Awoonga', 'value': 'awonmgr2' },
+        // { 'label': 'Awoonga', 'value': 'awonmgr2' },
         { 'label': 'Flashlite', 'value': 'flashmgr2' },
         { 'label': 'Tinaroo', 'value': 'tinmgr2.ib0' }
       ];
@@ -108,6 +108,12 @@ angular.module('nimrod-portal.services')
       query: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
     });
 
+    // create resource
+    resources.addResource = $resource(settings.URLs.resourceApiBase + settings.URLs.addResource, {}, {
+      query: tokenHandler.wrapConfig({ method: 'GET', isArray: false }),
+    });
+
+
     return resources;
   }])
   .factory('GetProjectsFactory', ['$resource', 'TokenHandler', 'settings', function ($resource, tokenHandler, settings) {
@@ -166,6 +172,11 @@ angular.module('nimrod-portal.services')
     return $resource(settings.URLs.serverApiBase + settings.URLs.resources , {}, {
       show: tokenHandler.wrapConfig({ method: 'GET', isArray: true }),
       create: tokenHandler.wrapConfig({ method: 'POST'})
+    });
+  }])
+  .factory('SshResourceFactory', ['$resource', 'TokenHandler', 'settings', function ($resource, tokenHandler, settings) {
+    return $resource(settings.URLs.resourceApiBase + settings.URLs.checkProcess , {}, {
+      create: tokenHandler.wrapConfig({ method: 'GET', isArray: false })
     });
   }])
   .factory('ResourceFactory', ['$resource', 'TokenHandler', 'settings', function ($resource, tokenHandler, settings) {

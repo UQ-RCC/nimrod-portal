@@ -10,9 +10,9 @@ angular.module('nimrod-portal.resource', [])
     }])
 
     .controller('ResourceCtrl', ['$scope', '$location', 
-        'ResourcesFactory', 'GetProjectsFactory', 'MiscFactory', 'ResourceFactory',
+        'SshResourceFactory', 'ResourcesFactory', 'GetProjectsFactory', 'MiscFactory', 'ResourceFactory',
         function ($scope, $location, 
-            ResourcesFactory, GetProjectsFactory, MiscFactory, ResourceFactory) {
+            SshResourceFactory, ResourcesFactory, GetProjectsFactory, MiscFactory, ResourceFactory) {
             /*********************************************/
             $scope.accounts = [];
             $scope.availableMachines = MiscFactory.availableMachines();
@@ -129,7 +129,18 @@ angular.module('nimrod-portal.resource', [])
                 $scope.loading = true;
                 // change limit accorindlgy
                 $scope.resource.limit = $scope.resource.nbatch * $scope.resource.maxbatch;
-                ResourcesFactory.create($scope.resource).$promise.then(
+                // ResourcesFactory.create($scope.resource).$promise.then(
+                //     function() {
+                //         $scope.loading = false;
+                //         $location.path("/resource-manager");
+                //     },
+                //     function (error) {
+                //         $scope.loading = false;
+                //         console.log(error);
+                //         $scope.broadcastMessage("Fail to add resource. Error:" + error);
+                //     }
+                // );
+                SshResourceFactory.create($scope.resource).$promise.then(
                     function() {
                         $scope.loading = false;
                         $location.path("/resource-manager");
