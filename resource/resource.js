@@ -140,6 +140,7 @@ angular.module('nimrod-portal.resource', [])
                 //         $scope.broadcastMessage("Fail to add resource. Error:" + error);
                 //     }
                 // );
+                $scope.resource.resname = $scope.resource.name;
                 SshResourceFactory.create($scope.resource).$promise.then(
                     function() {
                         $scope.loading = false;
